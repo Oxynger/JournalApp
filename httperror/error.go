@@ -1,11 +1,17 @@
 package httperror
 
+import (
+	"github.com/gin-gonic/gin"
+)
+
 // New Конструктор ошибки
-func New(status int, err error) HTTPError {
-	return HTTPError{
+func New(ctx *gin.Context, status int, err error) {
+	er := HTTPError{
 		Code:    status,
 		Message: err.Error(),
 	}
+
+	ctx.JSON(status, er)
 }
 
 // HTTPError Объект ошибки
