@@ -5,8 +5,8 @@ import (
 )
 
 // ShowScales Отдает весы с заданым id
-// @Summary Показать весы
-// @Description Получает id как строку
+// @Summary Весы с заданым id
+// @Description Принимает id как строку
 // @Tags scales
 // @Accept  json
 // @Produce  json
@@ -18,12 +18,12 @@ func (c *Controller) ShowScales(ctx *gin.Context) {
 }
 
 // ListScales Отдает все весы
-// @Summary Список акаутов
-// @Description получить Весы
+// @Summary Список весов
+// @Description Получить список весов
 // @Tags scales
 // @Accept  json
 // @Produce  json
-// @Param q query string false "name search by q"
+// @Param q query string false "Поиск весов по имени из запроса q"
 // @Success 200 {array} model.Scales
 // @Router /scales [get]
 func (c *Controller) ListScales(ctx *gin.Context) {

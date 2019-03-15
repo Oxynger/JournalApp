@@ -13,14 +13,14 @@ type ScaleType struct {
 
 // Scales godoc
 type Scales struct {
-	InventoryNumber string `bson:"_id,omitempty" json:"inventory_number" example:"5c8a9fa2371e1c3d98756ffa" format:"string"`
-	Type            ScaleType
-	SerialNumber    int64 `bson:"serial_number,minsize" json:"serial_number" example:"468844"`
+	InventoryNumber string    `bson:"_id,omitempty" json:"inventory_number" example:"5c8a9fa2371e1c3d98756ffa" format:"string"`
+	Type            ScaleType `bson:"type" json:"type"`
+	SerialNumber    int64     `bson:"serial_number,minsize" json:"serial_number" example:"468844"`
 
-	// VerificationDate date in UTC
+	// VerificationDate по лондонcкому времени (UTC)
 	VerificationDate time.Time `bson:"verification_date" json:"verification_date" example:"2019-03-14T23:08:14.586Z"`
 
-	// NextVerificationDate date in UTC
+	// NextVerificationDate по лондонcкому времени (UTC)
 	NextVerificationDate time.Time `bson:"next_verification_date" json:"next_verification_date" example:"2019-06-15T23:08:14.586Z"`
 
 	Bailee string `bson:"bailee" json:"bailee" example:"Толкунова А.А."`
