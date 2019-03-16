@@ -33,7 +33,8 @@ type Scales struct {
 	// NextVerificationDate по лондонcкому времени (UTC)
 	NextVerificationDate time.Time `bson:"next_verification_date" json:"next_verification_date" example:"2019-06-15T23:08:14.586Z"`
 
-	Bailee string `bson:"bailee" json:"bailee" example:"Толкунова А.А."`
+	Bailee  string `bson:"bailee" json:"bailee" example:"Толкунова А.А."`
+	Deleted bool   `bson:"deleted" json:"-" example:"False"`
 }
 
 func collection() *mongo.Collection {
