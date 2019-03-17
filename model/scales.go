@@ -27,10 +27,10 @@ type Scales struct {
 	Type            ScaleType `bson:"scaletype" json:"scaletype"`
 	SerialNumber    int64     `bson:"serial_number,minsize" json:"serial_number" example:"468844"`
 
-	// VerificationDate по лондонcкому времени (UTC)
+	// VerificationDate c часовым поясом сервера
 	VerificationDate time.Time `bson:"verification_date" json:"verification_date" example:"2019-03-14T23:08:14.586Z"`
 
-	// NextVerificationDate по лондонcкому времени (UTC)
+	// NextVerificationDate c часовым поясом сервера
 	NextVerificationDate time.Time `bson:"next_verification_date" json:"next_verification_date" example:"2019-06-15T23:08:14.586Z"`
 
 	Bailee string `bson:"bailee" json:"bailee" example:"Толкунова А.А."`
