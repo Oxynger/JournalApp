@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/gin-gonic/gin"
+
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -14,11 +16,8 @@ import (
 
 // ScaleType godoc
 type ScaleType struct {
-	Name      string `bson:"name" json:"name" example:"Имя весов"`
-	MaxWeight int    `bson:"max_W" json:"max_W" example:"30"`
-	MinWeight int    `bson:"min_W" json:"min_W" example:"100"`
-	Deviation int    `bson:"deviation" json:"deviation" example:"5"`
-	Passport  string `bson:"passport,omitempty" json:"passport"`
+	Name    string `bson:"name" json:"name" example:"Имя весов"`
+	Payload gin.H
 }
 
 // Scales godoc
@@ -33,8 +32,9 @@ type Scales struct {
 	// NextVerificationDate c часовым поясом сервера
 	NextVerificationDate time.Time `bson:"next_verification_date" json:"next_verification_date" example:"2019-06-15T23:08:14.586Z"`
 
-	Bailee  string `bson:"bailee" json:"bailee" example:"Толкунова А.А."`
-	Deleted bool   `bson:"deleted" json:"-" example:"False"`
+	Bailee     string `bson:"bailee" json:"bailee" example:"Толкунова А.А."`
+	Deleted    bool   `bson:"deleted" json:"-" example:"False" default:"False"`
+	GiriWeidht int    `bson:"giri_w" json:"giri_w"`
 }
 
 func collection() *mongo.Collection {
