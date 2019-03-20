@@ -1,0 +1,17 @@
+version: "3"
+services:
+  mongo:
+    image: "mongo:latest"
+  backend:
+    build:
+      contexxt: .
+      dockerfile: ./Dockerfile
+    environment:
+      - MongoURI=mongodb://localhost:27017
+      - PORT=4000
+    depends_on:
+      - mongo
+    ports:
+      - 4000:4000
+    volumes:
+      - .:/code
