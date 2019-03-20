@@ -1,5 +1,6 @@
 package model
 
+// Places godoc
 type Places struct {
 	Number string `bson:"_id,omitempty" json:"number" example:"1" format:"string"`
 	Name   string `bson:"name" json:"name" example:"Холодильник"`

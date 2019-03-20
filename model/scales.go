@@ -4,8 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/gin-gonic/gin"
-
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -16,8 +14,11 @@ import (
 
 // ScaleType godoc
 type ScaleType struct {
-	Name    string `bson:"name" json:"name" example:"Имя весов"`
-	Payload gin.H
+	Name      string `bson:"name" json:"name" example:"Имя весов"`
+	MaxWeight int    `bson:"max_W" json:"max_W" example:"30"`
+	MinWeight int    `bson:"min_W" json:"min_W" example:"100"`
+	Deviation int    `bson:"deviation" json:"deviation" example:"5"`
+	Passport  string `bson:"passport,omitempty" json:"passport"`
 }
 
 // Scales godoc
