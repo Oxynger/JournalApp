@@ -8,7 +8,7 @@ type Config struct {
 	// MongoURI Хранит URI для подключения к базе данных
 	MongoURI string
 
-	// Port Порт на котором будет сервер
+	// Port Порт на котором будет сервер, используеться пременная gin PORT
 	Port string
 }
 
@@ -26,6 +26,6 @@ func parseEnv(envName, defaultValue string) string {
 func New() Config {
 	return Config{
 		MongoURI: parseEnv("MongoURI", "mongodb://localhost:27017"),
-		Port:     parseEnv("Port", "4000"),
+		Port:     parseEnv("PORT", "4000"),
 	}
 }
