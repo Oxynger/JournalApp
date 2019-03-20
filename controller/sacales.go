@@ -49,6 +49,9 @@ func (c *Controller) ShowScales(ctx *gin.Context) {
 // @Produce  json
 // @Param q query string false "Поиск весов по имени из запроса q"
 // @Success 200 {array} model.Scales
+// @Failure 400 {object} httperror.HTTPError
+// @Failure 404 {object} httperror.HTTPError
+// @Failure 500 {object} httperror.HTTPError
 // @Router /scales [get]
 func (c *Controller) ListScales(ctx *gin.Context) {
 
