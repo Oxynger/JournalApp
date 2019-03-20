@@ -2,6 +2,7 @@ package model
 
 import "time"
 
+// Thermometers godoc
 type Thermometers struct {
 	Name                 string    `bson:"name" json:"name" example:"Термометр стекл. жидк."`
 	SerialNumber         string    `bson:"_id,omitempty" json:"number" example:"ТСЖ-Х № 1879з" format:"string"`

@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// ResaultInTimeDuration godoc
 type ResaultInTimeDuration struct {
 	Payload gin.H
 
@@ -13,6 +14,7 @@ type ResaultInTimeDuration struct {
 	End   time.Time `bson:"end" json:"end" example:"2019-03-14T23:08:14.586Z"`
 }
 
+// PlacesMeasuring godoc
 type PlacesMeasuring struct {
 	Payload gin.H
 

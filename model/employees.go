@@ -2,6 +2,7 @@ package model
 
 import "time"
 
+// Employees godoc
 type Employees struct {
 	MidlleName        string    `bson:"midname" json:"midname" example:"Сидоров"`
 	Name              string    `bson:"name" json:"name" example:"Петр"`
