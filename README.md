@@ -15,7 +15,7 @@ $ swag init
 $ go run ./main.go
 ```
 
-Для проверки работы можно перейти по url `http://localhost:4000/swagger/index.html`
+Для проверки работы можно перейти по url `http://localhost:8080/swagger/index.html`
 
 #### Команды
 
