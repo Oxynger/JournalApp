@@ -15,12 +15,13 @@ type ItemField struct {
 }
 
 type ItemScheme struct {
-	Name   string      `bson:"name" json:"name" example:"scale"`
-	Title  string      `bson:"title" json:"title" example:"Весы"`
-	Fields []ItemField `bson:"Fields" json:"Fields"`
+	Name    string      `bson:"name" json:"name" example:"scale"`
+	Title   string      `bson:"title" json:"title" example:"Весы"`
+	Fields  []ItemField `bson:"fields" json:"fields"`
+	Deleted bool        `bson:"deleted" json:"-"`
 }
 
-func Collection() *mongo.Collection {
+func ItemSchemeCollection() *mongo.Collection {
 	client := db.Client()
 	coll := client.Database("test").Collection("itemScheme")
 
@@ -50,7 +51,7 @@ func SomeAdd() ItemScheme {
 		},
 	}
 
-	insertResault, err := Collection().InsertOne(context.Background(), scaleScheme)
+	insertResault, err := ItemSchemeCollection().InsertOne(context.Background(), scaleScheme)
 
 	if err != nil {
 		log.Println(err)
