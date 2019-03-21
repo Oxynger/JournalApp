@@ -38,10 +38,9 @@ func main() {
 
 	v1 := router.Group("/api/v1")
 	{
-		scales := v1.Group("/scales")
+		itemScheme := v1.Group("/item/scheme")
 		{
-			scales.GET(":id", c.ShowScales)
-			scales.GET("", c.ListScales)
+			itemScheme.GET("", c.TestAdd)
 		}
 	}
 
