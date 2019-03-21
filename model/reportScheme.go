@@ -52,7 +52,7 @@ func SomeReportSchemeAdd() ReportScheme {
 		},
 	}
 
-	insertResault, err := Collection().InsertOne(context.Background(), scalesCalibrationScheme)
+	insertResault, err := ReportSchemeCollection().InsertOne(context.Background(), scalesCalibrationScheme)
 
 	if err != nil {
 		log.Println(err)

@@ -40,7 +40,7 @@ func main() {
 	{
 		itemScheme := v1.Group("/item/scheme")
 		{
-			itemScheme.GET("", c.TestAdd)
+			itemScheme.POST("", c.TestAdd)
 		}
 	}
 
