@@ -20,6 +20,7 @@ type ReportScheme struct {
 	Title   string        `bson:"title" json:"title" example:"Учет и калибровка весов"`
 	Journal string        `bson:"journal" json:"journal" example:"scales_calibration"`
 	Fields  []ReportField `bson:"fields" json:"fields"`
+	Deleted bool          `bson:"deleted" json:"-"`
 }
 
 // ReportSchemeCollection godoc

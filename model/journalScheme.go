@@ -16,7 +16,7 @@ type JournalComputed struct {
 	Devetions float32 `bson:"devetions,omitempty" json:"devetions,omitempty" example:"2"` // Допустимое отклонение
 
 	// Если type range
-	Range [2]float32 `bson:"range,omitempty" json:"range,omitempty" example:"[1.1,4]"` // Допустимы предел
+	Range *[2]float32 `bson:"range,omitempty" json:"range,omitempty" example:"[ 1.1 , 4 ]"` // Допустимы предел
 
 	// Если type equals
 	Value float32 `bson:"value,omitempty" json:"value,omitempty" example:"0.2"` // Значение, которому должно быть равно
@@ -47,16 +47,17 @@ type JournalField struct {
 	// Computed вычесляемое поле с переменным количеством полей
 	Computed *JournalComputed `bson:"computed,omitempty" json:"computed,omitempty"`
 
-	// If непонятно гже условие
+	// If непонятно какое условие
 
 }
 
 // JournalScheme godoc
 type JournalScheme struct {
-	Name   string         `bson:"name" json:"name" example:"scales_calibration"`
-	Title  string         `bson:"title" json:"title" example:"Учет и калибровка весов"`
-	Daily  bool           `bson:"daily" json:"daily" example:"true"`
-	Fixed  bool           `bson:"fixed" json:"fixed" example:"true"`
-	Items  []ItemInfo     `bson:"items" json:"items"`
-	Fields []JournalField `bson:"fields" json:"fields"`
+	Name    string         `bson:"name" json:"name" example:"scales_calibration"`
+	Title   string         `bson:"title" json:"title" example:"Учет и калибровка весов"`
+	Daily   bool           `bson:"daily" json:"daily" example:"true"`
+	Fixed   bool           `bson:"fixed" json:"fixed" example:"true"`
+	Items   []ItemInfo     `bson:"items" json:"items"`
+	Fields  []JournalField `bson:"fields" json:"fields"`
+	Deleted bool           `bson:"deleted" json:"-"`
 }
