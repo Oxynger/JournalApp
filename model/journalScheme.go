@@ -1,10 +1,12 @@
 package model
 
+// ItemInfo godoc
 type ItemInfo struct {
 	Name   string   `bson:"name" json:"name" example:"scale"`
 	Fields []string `bson:"fields" json:"fields"`
 }
 
+// JournalComputed godoc
 type JournalComputed struct {
 	Type  string `bson:"type" json:"type" example:"deviation"`
 	Field string `bson:"field" json:"field" example:"result"`
@@ -36,6 +38,7 @@ type JournalComputed struct {
 	Enum []string `bson:"enum,omitempty" json:"enum,omitempty" example:"0.2"`
 }
 
+// JournalField godoc
 type JournalField struct {
 	Name  string `bson:"name" json:"name" example:"serial_number"`
 	Title string `bson:"title" json:"title" example:"Серийный номер"`
@@ -45,9 +48,10 @@ type JournalField struct {
 	Computed *JournalComputed `bson:"computed,omitempty" json:"computed,omitempty"`
 
 	// If непонятно гже условие
-	
+
 }
 
+// JournalScheme godoc
 type JournalScheme struct {
 	Name   string         `bson:"name" json:"name" example:"scales_calibration"`
 	Title  string         `bson:"title" json:"title" example:"Учет и калибровка весов"`

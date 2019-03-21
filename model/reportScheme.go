@@ -8,11 +8,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+// ReportField godoc
 type ReportField struct {
 	Title string `bson:"title" json:"title" example:"Дата"`
 	Value string `bson:"value" json:"value" example:"{journal.date}"`
 }
 
+// ReportScheme godoc
 type ReportScheme struct {
 	Name    string        `bson:"name" json:"name" example:"scales_calibration"`
 	Title   string        `bson:"title" json:"title" example:"Учет и калибровка весов"`
@@ -20,6 +22,7 @@ type ReportScheme struct {
 	Fields  []ReportField `bson:"fields" json:"fields"`
 }
 
+// ReportSchemeCollection godoc
 func ReportSchemeCollection() *mongo.Collection {
 	client := db.Client()
 	coll := client.Database("test").Collection("reportScheme")
@@ -27,6 +30,7 @@ func ReportSchemeCollection() *mongo.Collection {
 	return coll
 }
 
+// SomeReportSchemeAdd godoc
 func SomeReportSchemeAdd() ReportScheme {
 	scalesCalibrationScheme := ReportScheme{
 		Name:    "scale",

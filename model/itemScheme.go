@@ -8,12 +8,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+// ItemField godoc
 type ItemField struct {
 	Name  string `bson:"name" json:"name" example:"serial_number"`
 	Title string `bson:"title" json:"title" example:"Серийный номер"`
 	Type  string `bson:"type" json:"type" example:"String"`
 }
 
+// ItemScheme godoc
 type ItemScheme struct {
 	Name    string      `bson:"name" json:"name" example:"scale"`
 	Title   string      `bson:"title" json:"title" example:"Весы"`
@@ -21,6 +23,7 @@ type ItemScheme struct {
 	Deleted bool        `bson:"deleted" json:"-"`
 }
 
+// ItemSchemeCollection godoc
 func ItemSchemeCollection() *mongo.Collection {
 	client := db.Client()
 	coll := client.Database("test").Collection("itemScheme")
@@ -28,6 +31,7 @@ func ItemSchemeCollection() *mongo.Collection {
 	return coll
 }
 
+// SomeAdd godoc
 func SomeAdd() ItemScheme {
 	scaleScheme := ItemScheme{
 		Name:  "scale",
