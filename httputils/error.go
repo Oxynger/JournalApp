@@ -1,4 +1,4 @@
-package httperror
+package httputils
 
 import (
 	"github.com/gin-gonic/gin"

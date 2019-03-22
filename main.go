@@ -38,10 +38,30 @@ func main() {
 
 	v1 := router.Group("/api/v1")
 	{
-		itemScheme := v1.Group("/item/scheme")
+		itemScheme := v1.Group("/scheme")
 		{
-			itemScheme.POST("", c.TestAdd)
+			itemScheme.POST("/item", c.TestAdd)
 		}
+		login := v1.Group("/login")
+		{
+			login.POST("", c.Auth)
+		}
+		journal := v1.Group("/journals")
+		{
+			journal.GET("", c.ListJouranls)
+			journal.GET(":journal_id", c.ShowJournal)
+			journal.GET(":journal_id/items", c.ListItemsInJournal)
+			journal.POST(":journal_id/items", c.AddItemToJournal)
+			journal.GET(":journal_id/items/:item_id", c.ShowItemInJournal)
+			journal.PUT(":journal_id/items/:item_id", c.SaveItemInJournal)
+			journal.DELETE(":journal_id/items/:item_id", c.DeleteItemFromJournal)
+			journal.POST(":journal_id/items/signature", c.CloseJournal)
+		}
+		logs := v1.Group("/logs/tabletapp")
+		{
+			logs.POST("", c.AddTablelog)
+		}
+
 	}
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
