@@ -5,7 +5,7 @@ import (
 	"./controller"
 	"./db"
 	"github.com/gin-gonic/gin"
-	"github.com/swaggo/gin-swagger"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 
 	swagdoc "./docs"
@@ -40,7 +40,11 @@ func main() {
 	{
 		itemScheme := v1.Group("/scheme")
 		{
-			itemScheme.POST("/item", c.TestAdd)
+			itemScheme.GET("/item", c.GetItemSchemes)
+			itemScheme.GET("/item/:itemscheme_id", c.GetItemScheme)
+			itemScheme.POST("/item", c.NewItemScheme)
+			itemScheme.PUT("/item/:itemscheme_id", c.UpdateItemScheme)
+			itemScheme.DELETE("/item/:itemscheme_id", c.DeleteItemScheme)
 		}
 		login := v1.Group("/login")
 		{
