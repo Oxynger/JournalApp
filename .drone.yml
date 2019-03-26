@@ -32,6 +32,8 @@ steps:
         from_secret: mongodb_root_username
       MONGODB_ROOT_PASSWORD:
         from_secret: mongodb_root_password
+      MONGODB_URI:
+        from_secret: mongodb_uri
       HOST_DOMAIN:
         from_secret: host_domain
       PORT:

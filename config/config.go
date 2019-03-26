@@ -25,7 +25,7 @@ func parseEnv(envName, defaultValue string) string {
 // New коструктор для конфига
 func New() Config {
 	return Config{
-		MongoURI: parseEnv("MongoURI", "mongodb://localhost:27017"),
+		MongoURI: parseEnv("MONGODB_URI", "mongodb://localhost:27017"),
 		Port:     parseEnv("PORT", "8080"),
 	}
 }
