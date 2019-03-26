@@ -34,6 +34,8 @@ steps:
         from_secret: mongodb_root_password
       HOST_DOMAIN:
         from_secret: host_domain
+      PORT:
+        from_secret: port
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
