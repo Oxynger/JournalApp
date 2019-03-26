@@ -13,6 +13,6 @@ import "github.com/gin-gonic/gin"
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
-// @Router /journals/{journal_id}/items/{item_id} [put]
+// @Router /logs/tabletapp [put]
 func (c *Controller) AddTablelog(ctx *gin.Context) {
 }
