@@ -85,7 +85,7 @@ func (c *Controller) ShowItemInJournal(ctx *gin.Context) {
 // @Tags Journal
 // @Accept  json
 // @Produce  json
-// @Param item body array true "Item"
+// @Param item body httputils.BlockArray true "Item"
 // @Param item_id path string true "Item id"
 // @Param journal_id path string true "Journal id"
 // @Success 200 {integer} int "Было ли завершено заполнение позиции сегодня -1 ─ была коректировка"
