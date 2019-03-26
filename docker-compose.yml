@@ -3,18 +3,21 @@ version: "3"
 networks:
   traefik-proxy:
     external: true
+  backend:
+    external: false
 
 services:
   db:
     image: mongo
     container_name: journalapp-db
     environment:
-      - USER_UID=1000
-      - USER_GID=1000
-    environment:
+      USER_UID: 1000
+      USER_GID: 1000
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD}
       MONGO_INITDB_DATABASE: ${MONGODB_INITDB}
+    networks:
+      - backend
     volumes:
       - /var/containers/journalapp/db:/data/db
 
@@ -30,6 +33,7 @@ services:
     restart: always
     networks:
       - traefik-proxy
+      - backend
     labels:
       - "traefik.backend=journalapp"
       - "traefik.port=80"
