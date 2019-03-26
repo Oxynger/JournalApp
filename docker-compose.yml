@@ -1,17 +1,36 @@
 version: "3"
+
+networks:
+  traefik-proxy:
+    external: true
+
 services:
-  mongo:
-    image: "mongo:latest"
-  backend:
-    build:
-      contexxt: .
-      dockerfile: ./Dockerfile
+  db:
+    image: mongo
+    container_name: journalapp-db
     environment:
-      - MongoURI=mongodb://localhost:27017
-      - PORT=4000
-    depends_on:
-      - mongo
-    ports:
-      - 4000:4000
+      - USER_UID=1000
+      - USER_GID=1000
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGODB_INITDB}
     volumes:
-      - .:/code
+      - /var/containers/journalapp/db:/data/db
+
+  server:
+    image: reloc/journalapp
+    container_name: journalapp
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    depends_on:
+      - db
+    restart: always
+    networks:
+      - traefik-proxy
+    labels:
+      - "traefik.backend=journalapp"
+      - "traefik.port=80"
+      - "traefik.docker.network=traefik-proxy"
+      - "traefik.frontend.rule=Host:${HOST_DOMAIN}"
