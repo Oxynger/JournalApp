@@ -22,8 +22,9 @@ services:
     image: reloc/journalapp
     container_name: journalapp
     environment:
-      - USER_UID=1000
-      - USER_GID=1000
+      USER_UID: 1000
+      USER_GID: 1000
+      MONGODB_URI: ${MONGODB_URI}
     depends_on:
       - db
     restart: always
