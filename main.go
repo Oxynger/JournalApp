@@ -23,7 +23,7 @@ func init() {
 	conf = config.New()
 	db.Connect(conf.MongoURI)
 
-	swagdoc.SwaggerInfo.Host = "localhost:" + conf.Port
+	swagdoc.SwaggerInfo.Host = conf.Host
 	swagdoc.SwaggerInfo.BasePath = "/api/v1"
 	swagdoc.SwaggerInfo.Title = "API приложения для составления журналов"
 	swagdoc.SwaggerInfo.Version = "0.1.0"
