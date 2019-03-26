@@ -29,6 +29,7 @@ services:
       USER_GID: 1000
       MONGODB_URI: ${MONGODB_URI}
       PORT: ${PORT}
+      HOST_DOMAIN: ${HOST_DOMAIN}
     depends_on:
       - db
     restart: always
