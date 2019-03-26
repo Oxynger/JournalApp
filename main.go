@@ -50,7 +50,7 @@ func main() {
 		{
 			login.POST("", c.Auth)
 		}
-		journal := v1.Group("/journals")
+		journal := v1.Group("/journal")
 		{
 			journal.GET("", c.ListJouranls)
 			journal.GET(":journal_id", c.ShowJournal)

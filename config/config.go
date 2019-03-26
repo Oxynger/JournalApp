@@ -23,10 +23,12 @@ func parseEnv(envName, defaultValue string) string {
 }
 
 // New коструктор для конфига
-func New() Config {
-	return Config{
-		MongoURI: parseEnv("MONGODB_URI", "mongodb://localhost:27017"),
-		Port:     parseEnv("PORT", "8080"),
-		Host:     parseEnv("HOST_DOMAIN", "localhost"),
-	}
+func New() (config Config) {
+	config.MongoURI = parseEnv("MONGODB_URI", "mongodb://localhost:27017")
+	config.Port = parseEnv("PORT", "8080")
+
+	defaultHost := "localhost" + ":" + config.Port
+	config.Host = parseEnv("HOST_DOMAIN", defaultHost)
+
+	return config
 }

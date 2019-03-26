@@ -13,7 +13,7 @@ import (
 // @Success 200 {array} httputils.Journal
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
-// @Router /journals [get]
+// @Router /journal [get]
 func (c *Controller) ListJouranls(ctx *gin.Context) {
 }
 
@@ -28,7 +28,7 @@ func (c *Controller) ListJouranls(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
-// @Router /journals/{journal_id} [get]
+// @Router /journal/{journal_id} [get]
 func (c *Controller) ShowJournal(ctx *gin.Context) {
 }
 
@@ -43,7 +43,7 @@ func (c *Controller) ShowJournal(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
-// @Router /journals/{journal_id}/items [get]
+// @Router /journal/{journal_id}/items [get]
 func (c *Controller) ListItemsInJournal(ctx *gin.Context) {
 }
 
@@ -59,7 +59,7 @@ func (c *Controller) ListItemsInJournal(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
-// @Router /journals/{journal_id}/items [post]
+// @Router /journal/{journal_id}/items [post]
 func (c *Controller) AddItemToJournal(ctx *gin.Context) {
 }
 
@@ -75,7 +75,7 @@ func (c *Controller) AddItemToJournal(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
-// @Router /journals/{journal_id}/items/{item_id} [get]
+// @Router /journal/{journal_id}/items/{item_id} [get]
 func (c *Controller) ShowItemInJournal(ctx *gin.Context) {
 }
 
@@ -92,7 +92,7 @@ func (c *Controller) ShowItemInJournal(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
-// @Router /journals/{journal_id}/items/{item_id} [put]
+// @Router /journal/{journal_id}/items/{item_id} [put]
 func (c *Controller) SaveItemInJournal(ctx *gin.Context) {
 }
 
@@ -108,7 +108,7 @@ func (c *Controller) SaveItemInJournal(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
-// @Router /journals/{journal_id}/items/{item_id} [delete]
+// @Router /journal/{journal_id}/items/{item_id} [delete]
 func (c *Controller) DeleteItemFromJournal(ctx *gin.Context) {
 }
 
@@ -123,6 +123,6 @@ func (c *Controller) DeleteItemFromJournal(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
-// @Router /journals/{journal_id}/signature [put]
+// @Router /journal/{journal_id}/signature [put]
 func (c *Controller) CloseJournal(ctx *gin.Context) {
 }
