@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"../db"
+	"github.com/Oxynger/JournalApp/db"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 

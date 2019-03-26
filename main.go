@@ -1,14 +1,14 @@
 package main
 
 import (
-	"./config"
-	"./controller"
-	"./db"
+	"github.com/Oxynger/JournalApp/config"
+	"github.com/Oxynger/JournalApp/controller"
+	"github.com/Oxynger/JournalApp/db"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 
-	swagdoc "./docs"
+	swagdoc "github.com/Oxynger/JournalApp/docs"
 )
 
 // @contact.name API Support
