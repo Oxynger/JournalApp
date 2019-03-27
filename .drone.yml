@@ -4,17 +4,31 @@ name: default
 steps:
   - name: init
     image: golang
+    volumes:
+      - name: deps
+        path: /go
     commands:
       - go get github.com/swaggo/swag/cmd/swag
       - swag init
-      - go mod vendor
+      - go get
 
   - name: test
     image: golang
+    volumes:
+      - name: deps
+        path: /go
     commands:
-      - go test -v -mod=vendor
-  
+      - go test -v
+
   - name: build
+    image: golang
+    volumes:
+      - name: deps
+        path: /go
+    commands:
+      - go build -o main
+  
+  - name: dockerize
     image: docker
     commands:
       - docker build -t reloc/journalapp .
@@ -51,3 +65,5 @@ volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
+  - name: deps
+    temp: {}
