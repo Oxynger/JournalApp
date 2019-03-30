@@ -33,7 +33,6 @@ func init() {
 
 func main() {
 	router := gin.Default()
-
 	c := controller.New()
 
 	v1 := router.Group("/api/v1")

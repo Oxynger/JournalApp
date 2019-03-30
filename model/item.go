@@ -1,4 +1,4 @@
-package httputils
+package model
 
 // Item описание объекта
 type Item struct {

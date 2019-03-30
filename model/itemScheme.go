@@ -8,6 +8,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+// ItemInfo godoc
+type ItemInfo struct {
+	Name   string   `bson:"name" json:"name" example:"scale"`
+	Fields []string `bson:"fields" json:"fields"`
+}
+
 // ItemField godoc
 type ItemField struct {
 	Name  string `bson:"name" json:"name" example:"serial_number"`

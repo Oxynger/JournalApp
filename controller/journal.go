@@ -10,7 +10,7 @@ import (
 // @Tags Journal
 // @Accept  json
 // @Produce  json
-// @Success 200 {array} httputils.Journal
+// @Success 200 {array} model.Journal
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
 // @Router /journal [get]
@@ -24,7 +24,7 @@ func (c *Controller) ListJouranls(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param journal_id path string true "Journal id"
-// @Success 200 {object} httputils.ListJournalItems
+// @Success 200 {object} model.ListJournalItems
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
@@ -39,7 +39,7 @@ func (c *Controller) ShowJournal(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param journal_id path string true "Journal id"
-// @Success 200 {array} httputils.Item
+// @Success 200 {array} model.Item
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
@@ -53,9 +53,9 @@ func (c *Controller) ListItemsInJournal(ctx *gin.Context) {
 // @Tags Journal
 // @Accept  json
 // @Produce  json
-// @Param item body httputils.Item true "Item"
+// @Param item body model.Item true "Item"
 // @Param journal_id path string true "Journal id"
-// @Success 200 {object} httputils.Item
+// @Success 200 {object} model.Item
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
@@ -71,7 +71,7 @@ func (c *Controller) AddItemToJournal(ctx *gin.Context) {
 // @Produce  json
 // @Param item_id path string true "Item id"
 // @Param journal_id path string true "Journal id"
-// @Success 200 {object} httputils.JournalItem
+// @Success 200 {object} model.JournalItem
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
@@ -85,7 +85,7 @@ func (c *Controller) ShowItemInJournal(ctx *gin.Context) {
 // @Tags Journal
 // @Accept  json
 // @Produce  json
-// @Param item body httputils.BlockArray true "Item"
+// @Param item body model.BlockArray true "Item"
 // @Param item_id path string true "Item id"
 // @Param journal_id path string true "Journal id"
 // @Success 200 {integer} int "Было ли завершено заполнение позиции сегодня -1 ─ была коректировка"
@@ -104,7 +104,7 @@ func (c *Controller) SaveItemInJournal(ctx *gin.Context) {
 // @Produce  json
 // @Param item_id path string true "Item id"
 // @Param journal_id path string true "Journal id"
-// @Success 200 {object} httputils.Item
+// @Success 200 {object} model.Item
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
