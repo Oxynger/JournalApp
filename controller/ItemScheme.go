@@ -1,7 +1,11 @@
 package controller
 
 import (
+	"net/http"
+
+	"github.com/Oxynger/JournalApp/model"
 	"github.com/gin-gonic/gin"
+	"github.com/swaggo/swag/example/celler/httputil"
 )
 
 // GetItemSchemes Получить все схемы объектов
@@ -11,12 +15,16 @@ import (
 // @Accept  json
 // @Produce  json
 // @Success 200 {array} model.ItemScheme
-// @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
 // @Router /scheme/item [get]
 func (c *Controller) GetItemSchemes(ctx *gin.Context) {
-
+	schemes, err := model.ItemSchemeAll()
+	if err != nil {
+		httputil.NewError(ctx, http.StatusNotFound, err)
+		return
+	}
+	ctx.JSON(http.StatusOK, schemes)
 }
 
 // GetItemScheme Получить схему объекта с id
@@ -32,7 +40,13 @@ func (c *Controller) GetItemSchemes(ctx *gin.Context) {
 // @Failure 500 {object} httputils.HTTPError
 // @Router /scheme/item/{itemscheme_id} [get]
 func (c *Controller) GetItemScheme(ctx *gin.Context) {
-
+	id := ctx.Param("itemscheme_id")
+	scheme, err := model.ItemSchemeOne(id)
+	if err != nil {
+		httputil.NewError(ctx, http.StatusNotFound, err)
+		return
+	}
+	ctx.JSON(http.StatusOK, scheme)
 }
 
 // NewItemScheme Создать новую схему объектов
@@ -41,14 +55,29 @@ func (c *Controller) GetItemScheme(ctx *gin.Context) {
 // @Tags ItemScheme
 // @Accept  json
 // @Produce  json
-// @Param NewItemScheme body model.ItemScheme true "New Item Scheme"
-// @Success 200 {object} model.ItemScheme
+// @Param NewItemScheme body model.NewItemScheme true "New Item Scheme"
+// @Success 200 {object} model.NewItemScheme
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
 // @Router /scheme/item [post]
 func (c *Controller) NewItemScheme(ctx *gin.Context) {
+	var newItemScheme model.NewItemScheme
+	if err := ctx.ShouldBindJSON(&newItemScheme); err != nil {
+		httputil.NewError(ctx, http.StatusBadRequest, err)
+		return
+	}
+	if err := newItemScheme.Validation(); err != nil {
+		httputil.NewError(ctx, http.StatusBadRequest, err)
+		return
+	}
 
+	err := newItemScheme.Insert()
+	if err != nil {
+		httputil.NewError(ctx, http.StatusBadRequest, err)
+		return
+	}
+	ctx.JSON(http.StatusOK, newItemScheme)
 }
 
 // UpdateItemScheme Изменить схему объектов с id
@@ -65,7 +94,25 @@ func (c *Controller) NewItemScheme(ctx *gin.Context) {
 // @Failure 500 {object} httputils.HTTPError
 // @Router /scheme/item/{itemscheme_id} [put]
 func (c *Controller) UpdateItemScheme(ctx *gin.Context) {
+	id := ctx.Param("itemscheme_id")
 
+	var updateItemScheme model.UpdateItemScheme
+	if err := ctx.ShouldBindJSON(&updateItemScheme); err != nil {
+		httputil.NewError(ctx, http.StatusBadRequest, err)
+		return
+	}
+	if err := updateItemScheme.Validation(); err != nil {
+		httputil.NewError(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	err := updateItemScheme.Update(id)
+
+	if err != nil {
+		httputil.NewError(ctx, http.StatusNotFound, err)
+		return
+	}
+	ctx.JSON(http.StatusOK, updateItemScheme)
 }
 
 // DeleteItemScheme Удалить схему объектов с id
@@ -81,5 +128,11 @@ func (c *Controller) UpdateItemScheme(ctx *gin.Context) {
 // @Failure 500 {object} httputils.HTTPError
 // @Router /scheme/item/{itemscheme_id} [delete]
 func (c *Controller) DeleteItemScheme(ctx *gin.Context) {
-
+	id := ctx.Param("itemscheme_id")
+	err := model.DeleteSchemeOne(id)
+	if err != nil {
+		httputil.NewError(ctx, http.StatusNotFound, err)
+		return
+	}
+	ctx.JSON(http.StatusOK, id)
 }

@@ -10,13 +10,21 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// Journal описание обекта журнала
-type Journal struct {
+type (
+	// BlockArray godoc
+	BlockArray = []Block
+
+	// Journal godoc
+	Journal = map[string]interface{}
+)
+
+// JournalInfo описание обекта журнала
+type JournalInfo struct {
 	// Name название журнала
 	Name string `bson:"name" json:"name" example:"scale_repair"`
 
 	// ID идентификатор журнала
-	ID interface{} `bson:"_id, omitempty" json:"journal_id" example:"5c93e5621f23834a97aba93b"`
+	ID interface{} `bson:"journal_id" json:"journal_id" example:"5c93e5621f23834a97aba93b"`
 
 	// Daily является ли журнал ежедневным
 	Daily bool `bson:"daily" json:"daily" example:"true"`
@@ -24,9 +32,6 @@ type Journal struct {
 	// Accepted было ли завершено заполнение журнала сегодня
 	Accepted bool `bson:"accepted" json:"accepted" example:"true"`
 }
-
-// BlockArray godoc
-type BlockArray = []Block
 
 // ListJournalItems список объектов принадлежащих группе
 type ListJournalItems struct {
