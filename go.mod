@@ -3,6 +3,7 @@ module github.com/Oxynger/JournalApp
 go 1.12
 
 require (
+	github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc
 	github.com/gin-gonic/gin v1.3.0
 	github.com/go-openapi/jsonpointer v0.19.0 // indirect
 	github.com/go-openapi/jsonreference v0.19.0 // indirect
@@ -12,7 +13,7 @@ require (
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/go-cmp v0.2.0 // indirect
 	github.com/swaggo/gin-swagger v1.1.0
-	github.com/swaggo/swag v1.5.0 // indirect
+	github.com/swaggo/swag v1.5.0
 	github.com/tidwall/pretty v0.0.0-20190325153808-1166b9ac2b65 // indirect
 	github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c // indirect
 	github.com/xdg/stringprep v1.0.0 // indirect
