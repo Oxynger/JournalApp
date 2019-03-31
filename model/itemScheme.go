@@ -29,8 +29,8 @@ type ItemScheme struct {
 	Deleted bool        `bson:"deleted" json:"-"`
 }
 
-// ItemSchemeCollection godoc
-func ItemSchemeCollection() *mongo.Collection {
+// itemSchemeCollection godoc
+func itemSchemeCollection() *mongo.Collection {
 	client := db.Client()
 	coll := client.Database("test").Collection("itemScheme")
 
@@ -61,7 +61,7 @@ func SomeAdd() ItemScheme {
 		},
 	}
 
-	insertResault, err := ItemSchemeCollection().InsertOne(context.Background(), scaleScheme)
+	insertResault, err := itemSchemeCollection().InsertOne(context.Background(), scaleScheme)
 
 	if err != nil {
 		log.Println(err)

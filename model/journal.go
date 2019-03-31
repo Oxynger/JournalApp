@@ -1,12 +1,22 @@
 package model
 
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/Oxynger/JournalApp/db"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+)
+
 // Journal описание обекта журнала
 type Journal struct {
 	// Name название журнала
 	Name string `bson:"name" json:"name" example:"scale_repair"`
 
-	//ID идентификатор журнала
-	ID string `bson:"_id" json:"journal_id" example:"5c93e5621f23834a97aba93b"`
+	// ID идентификатор журнала
+	ID interface{} `bson:"_id, omitempty" json:"journal_id" example:"5c93e5621f23834a97aba93b"`
 
 	// Daily является ли журнал ежедневным
 	Daily bool `bson:"daily" json:"daily" example:"true"`
@@ -38,7 +48,7 @@ type Block struct {
 	Type      string     `bson:"type" json:"type" example:"text"`
 	Name      string     `bson:"name" json:"name"`
 	Value     *string    `bson:"value,omitempty" json:"value,omitempty"`
-	Check     Check      `bson:"check,omitempty" json:"check,omitempty"`
+	Check     *Check     `bson:"check,omitempty" json:"check,omitempty"`
 	Statement *string    `bson:"statement,omitempty" json:"statement,omitempty"`
 	Image     *string    `bson:"image,omitempty" json:"image,omitempty"`
 	Buttons   *[2]string `bson:"buttons,omitempty" json:"buttons,omitempty"`
@@ -58,8 +68,8 @@ type Check struct {
 	ShowNow bool   `bson:"show_now" json:"show_now" example:"true"`
 
 	// Norm Если type deviation
-	Norm      float32 `bson:"norm,omitempty" json:"norm,omitempty" example:"10"`          // Нормальный вес
-	Devetions float32 `bson:"devetions,omitempty" json:"devetions,omitempty" example:"2"` // Допустимое отклонение
+	Norm      *float32 `bson:"norm,omitempty" json:"norm,omitempty" example:"10"`          // Нормальный вес
+	Devetions *float32 `bson:"devetions,omitempty" json:"devetions,omitempty" example:"2"` // Допустимое отклонение
 
 	// Range Если type range
 	Range *[2]float32 `bson:"range,omitempty" json:"range,omitempty"` // Допустимы предел
@@ -82,4 +92,47 @@ type Check struct {
 	// значение не принадлежит данному массиву, то
 	// check = false
 	Enum *[]string `bson:"enum,omitempty" json:"enum,omitempty"`
+}
+
+// journalCollection godoc
+func journalCollection() *mongo.Collection {
+	client := db.Client()
+	coll := client.Database("test").Collection("Journal")
+
+	return coll
+}
+
+// ListJournals godoc
+func ListJournals() ([]Journal, error) {
+	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
+
+	var List []Journal
+
+	cur, err := journalCollection().Find(timeout, bson.D{})
+
+	defer cur.Close(timeout)
+
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	for cur.Next(timeout) {
+		var resault Journal
+		err := cur.Decode(&resault)
+
+		if err != nil {
+			log.Println(err)
+			return nil, err
+		}
+
+		List = append(List, resault)
+	}
+
+	if err := cur.Err(); err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	return List, nil
 }
