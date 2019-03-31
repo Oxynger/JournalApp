@@ -29,7 +29,7 @@ type ItemScheme struct {
 	Name    string             `bson:"name" json:"name" example:"scale"`
 	Title   string             `bson:"title" json:"title" example:"Весы"`
 	Fields  []ItemField        `bson:"fields" json:"fields"`
-	Deleted bool               `bson:"deleted" json:"deleted" example: false`
+	Deleted bool               `bson:"deleted" json:"-"`
 }
 
 // NewItemScheme godoc
@@ -37,7 +37,7 @@ type NewItemScheme struct {
 	Name    string      `bson:"name" json:"name" example:"scale"`
 	Title   string      `bson:"title" json:"title" example:"Весы"`
 	Fields  []ItemField `bson:"fields" json:"fields"`
-	Deleted bool        `bson:"deleted" json:"deleted" example: false`
+	Deleted bool        `bson:"deleted" json:"-"`
 }
 
 // UpdateItemScheme godoc
@@ -45,7 +45,7 @@ type UpdateItemScheme struct {
 	Name    string      `bson:"name" json:"name" example:"scale"`
 	Title   string      `bson:"title" json:"title" example:"Весы"`
 	Fields  []ItemField `bson:"fields" json:"fields"`
-	Deleted bool        `bson:"deleted" json:"deleted" example: false`
+	Deleted bool        `bson:"deleted" json:"-" example: -`
 }
 
 // Insert godoc
@@ -172,7 +172,7 @@ func ItemSchemeOne(id string) (ItemScheme, error) {
 		return ItemScheme{}, err
 	}
 	row := new(ItemScheme)
-	err = ItemSchemeCollection().FindOne(context.Background(), bson.D{{"_id", ojectID}}).Decode(&row)
+	err = ItemSchemeCollection().FindOne(context.Background(), bson.D{{"$and", bson.A{bson.D{{"_id", ojectID}}, bson.D{{"deleted", false}}}}}).Decode(&row)
 	if err != nil {
 		log.Println(err)
 		return ItemScheme{}, err
@@ -188,11 +188,11 @@ func DeleteSchemeOne(id string) error {
 		log.Println(err)
 		return err
 	}
-	updateResault, err := ItemSchemeCollection().UpdateOne(context.Background(), bson.D{{"_id", ojectID}}, bson.D{{"$set", bson.D{{"deleted", true}}}})
+	updateResault, err := ItemSchemeCollection().UpdateOne(context.Background(), bson.D{{"$and", bson.A{bson.D{{"_id", ojectID}}, bson.D{{"deleted", false}}}}}, bson.D{{"$set", bson.D{{"deleted", true}}}})
 	if err != nil {
 		log.Println(err)
 		return err
 	}
-	log.Println("updated documents: ", updateResault.UpsertedID)
+	log.Println("deleted documents: ", updateResault.UpsertedID)
 	return err
 }
