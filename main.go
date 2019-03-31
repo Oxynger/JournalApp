@@ -1,14 +1,14 @@
 package main
 
 import (
-	"./config"
-	"./controller"
-	"./db"
+	"github.com/Oxynger/JournalApp/config"
+	"github.com/Oxynger/JournalApp/controller"
+	"github.com/Oxynger/JournalApp/db"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 
-	swagdoc "./docs"
+	swagdoc "github.com/Oxynger/JournalApp/docs"
 )
 
 // @contact.name API Support
@@ -23,7 +23,7 @@ func init() {
 	conf = config.New()
 	db.Connect(conf.MongoURI)
 
-	swagdoc.SwaggerInfo.Host = "localhost:" + conf.Port
+	swagdoc.SwaggerInfo.Host = conf.Host
 	swagdoc.SwaggerInfo.BasePath = "/api/v1"
 	swagdoc.SwaggerInfo.Title = "API приложения для составления журналов"
 	swagdoc.SwaggerInfo.Version = "0.1.0"
@@ -50,7 +50,7 @@ func main() {
 		{
 			login.POST("", c.Auth)
 		}
-		journal := v1.Group("/journals")
+		journal := v1.Group("/journal")
 		{
 			journal.GET("", c.ListJouranls)
 			journal.GET(":journal_id", c.ShowJournal)

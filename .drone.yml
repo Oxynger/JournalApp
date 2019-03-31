@@ -1,0 +1,69 @@
+kind: pipeline
+name: default
+
+steps:
+  - name: init
+    image: golang
+    volumes:
+      - name: deps
+        path: /go
+    commands:
+      - go get github.com/swaggo/swag/cmd/swag
+      - swag init
+      - go get
+
+  - name: test
+    image: golang
+    volumes:
+      - name: deps
+        path: /go
+    commands:
+      - go test -v
+
+  - name: build
+    image: golang
+    volumes:
+      - name: deps
+        path: /go
+    commands:
+      - go build -o main
+  
+  - name: dockerize
+    image: docker
+    commands:
+      - docker build -t reloc/journalapp .
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    when:
+      branch:
+        - master
+
+  - name: deploy
+    image: docker/compose:1.23.2
+    commands:
+      - docker-compose up -d
+    environment:
+      MONGODB_ROOT_USERNAME:
+        from_secret: mongodb_root_username
+      MONGODB_ROOT_PASSWORD:
+        from_secret: mongodb_root_password
+      MONGODB_URI:
+        from_secret: mongodb_uri
+      HOST_DOMAIN:
+        from_secret: host_domain
+      PORT:
+        from_secret: port
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    when:
+      branch:
+        - master
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+  - name: deps
+    temp: {}

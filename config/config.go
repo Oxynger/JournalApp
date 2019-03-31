@@ -10,22 +10,25 @@ type Config struct {
 
 	// Port Порт на котором будет сервер, используеться пременная gin PORT
 	Port string
+
+	// Host — домен, на котором работает API
+	Host string
 }
 
 func parseEnv(envName, defaultValue string) string {
-	env := os.Getenv(envName)
-
-	if env == "" {
-		return defaultValue
+	if env := os.Getenv(envName); env != "" {
+		return env
 	}
-
-	return env
+	return defaultValue
 }
 
 // New коструктор для конфига
-func New() Config {
-	return Config{
-		MongoURI: parseEnv("MongoURI", "mongodb://localhost:27017"),
-		Port:     parseEnv("PORT", "8080"),
-	}
+func New() (config Config) {
+	config.MongoURI = parseEnv("MONGODB_URI", "mongodb://localhost:27017")
+	config.Port = parseEnv("PORT", "8080")
+
+	defaultHost := "localhost" + ":" + config.Port
+	config.Host = parseEnv("HOST_DOMAIN", defaultHost)
+
+	return config
 }

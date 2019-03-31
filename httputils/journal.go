@@ -15,6 +15,9 @@ type Journal struct {
 	Accepted bool `bson:"accepted" json:"accepted" example:"true"`
 }
 
+// BlockArray godoc
+type BlockArray = []Block
+
 // ListJournalItems список объектов принадлежащих группе
 type ListJournalItems struct {
 	// Возможность добавления в журнал новых позиций
