@@ -23,7 +23,16 @@ func Client() mongo.Client {
 // Connect Получает инстанс подключения к базе данных
 func Connect(uri string) {
 	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	connect, err := mongo.Connect(timeout, options.Client().ApplyURI(uri))
+
+	auth := options.Credential{
+		Username:    "root",
+		Password:    "t0p5ecret",
+		PasswordSet: true,
+	}
+
+	connectOptions := options.Client().ApplyURI(uri).SetAuth(auth)
+
+	connect, err := mongo.Connect(timeout, connectOptions)
 
 	if err != nil {
 		log.Fatal(err)
