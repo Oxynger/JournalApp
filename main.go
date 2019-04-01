@@ -26,7 +26,7 @@ func init() {
 	swagdoc.SwaggerInfo.Host = conf.Host
 	swagdoc.SwaggerInfo.BasePath = "/api/v1"
 	swagdoc.SwaggerInfo.Title = "API приложения для составления журналов"
-	swagdoc.SwaggerInfo.Version = "0.1.0"
+	swagdoc.SwaggerInfo.Version = "1.0.0"
 	swagdoc.SwaggerInfo.Description = "Это сервер предоставляющий API для сервиса электронных журналов"
 
 }

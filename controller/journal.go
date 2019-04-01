@@ -22,7 +22,7 @@ func (c *Controller) ListJouranls(ctx *gin.Context) {
 	journals, err := model.JournalsAll()
 
 	if err != nil {
-		httputils.New(ctx, http.StatusNotFound, err)
+		httputils.NewError(ctx, http.StatusNotFound, err)
 		return
 	}
 
@@ -46,7 +46,7 @@ func (c *Controller) ShowJournal(ctx *gin.Context) {
 	journal, err := model.JournalOne(id)
 
 	if err != nil {
-		httputils.New(ctx, http.StatusNotFound, err)
+		httputils.NewError(ctx, http.StatusNotFound, err)
 		return
 	}
 
@@ -70,13 +70,13 @@ func (c *Controller) AddJournal(ctx *gin.Context) {
 	var journal model.Journal
 
 	if err := ctx.ShouldBindJSON(&journal); err != nil {
-		httputils.New(ctx, http.StatusBadRequest, err)
+		httputils.NewError(ctx, http.StatusBadRequest, err)
 		return
 	}
 
 	resaultJournal, err := model.AddJournal(journal)
 	if err != nil {
-		httputils.New(ctx, http.StatusNotFound, err)
+		httputils.NewError(ctx, http.StatusNotFound, err)
 		return
 	}
 
@@ -101,7 +101,7 @@ func (c *Controller) DeleteJournal(ctx *gin.Context) {
 	journal, err := model.JournalDelete(id)
 
 	if err != nil {
-		httputils.New(ctx, http.StatusNotFound, err)
+		httputils.NewError(ctx, http.StatusNotFound, err)
 	}
 
 	ctx.JSON(http.StatusOK, journal)
@@ -125,14 +125,14 @@ func (c *Controller) UpdateJournal(ctx *gin.Context) {
 	var journal model.Journal
 
 	if err := ctx.ShouldBindJSON(&journal); err != nil {
-		httputils.New(ctx, http.StatusBadRequest, err)
+		httputils.NewError(ctx, http.StatusBadRequest, err)
 		return
 	}
 
 	resaultJournal, err := model.JournalUpdate(id, journal)
 
 	if err != nil {
-		httputils.New(ctx, http.StatusNotFound, err)
+		httputils.NewError(ctx, http.StatusNotFound, err)
 	}
 
 	ctx.JSON(http.StatusOK, resaultJournal)

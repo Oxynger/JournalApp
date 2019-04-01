@@ -5,7 +5,7 @@ import (
 )
 
 // New Конструктор ошибки
-func New(ctx *gin.Context, status int, err error) {
+func NewError(ctx *gin.Context, status int, err error) {
 	er := HTTPError{
 		Code:    status,
 		Message: err.Error(),
