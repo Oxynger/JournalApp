@@ -3,9 +3,9 @@ package controller
 import (
 	"net/http"
 
+	"github.com/Oxynger/JournalApp/httputils"
 	"github.com/Oxynger/JournalApp/model"
 	"github.com/gin-gonic/gin"
-	"github.com/swaggo/swag/example/celler/httputil"
 )
 
 // GetItemSchemes Получить все схемы объектов
@@ -21,7 +21,7 @@ import (
 func (c *Controller) GetItemSchemes(ctx *gin.Context) {
 	schemes, err := model.ItemSchemeAll()
 	if err != nil {
-		httputil.NewError(ctx, http.StatusNotFound, err)
+		httputils.NewError(ctx, http.StatusNotFound, err)
 		return
 	}
 	ctx.JSON(http.StatusOK, schemes)
@@ -43,7 +43,7 @@ func (c *Controller) GetItemScheme(ctx *gin.Context) {
 	id := ctx.Param("itemscheme_id")
 	scheme, err := model.ItemSchemeOne(id)
 	if err != nil {
-		httputil.NewError(ctx, http.StatusNotFound, err)
+		httputils.NewError(ctx, http.StatusNotFound, err)
 		return
 	}
 	ctx.JSON(http.StatusOK, scheme)
@@ -64,17 +64,17 @@ func (c *Controller) GetItemScheme(ctx *gin.Context) {
 func (c *Controller) NewItemScheme(ctx *gin.Context) {
 	var newItemScheme model.NewItemScheme
 	if err := ctx.ShouldBindJSON(&newItemScheme); err != nil {
-		httputil.NewError(ctx, http.StatusBadRequest, err)
+		httputils.NewError(ctx, http.StatusBadRequest, err)
 		return
 	}
 	if err := newItemScheme.Validation(); err != nil {
-		httputil.NewError(ctx, http.StatusBadRequest, err)
+		httputils.NewError(ctx, http.StatusBadRequest, err)
 		return
 	}
 
 	err := newItemScheme.Insert()
 	if err != nil {
-		httputil.NewError(ctx, http.StatusBadRequest, err)
+		httputils.NewError(ctx, http.StatusBadRequest, err)
 		return
 	}
 	ctx.JSON(http.StatusOK, newItemScheme)
@@ -98,18 +98,18 @@ func (c *Controller) UpdateItemScheme(ctx *gin.Context) {
 
 	var updateItemScheme model.UpdateItemScheme
 	if err := ctx.ShouldBindJSON(&updateItemScheme); err != nil {
-		httputil.NewError(ctx, http.StatusBadRequest, err)
+		httputils.NewError(ctx, http.StatusBadRequest, err)
 		return
 	}
 	if err := updateItemScheme.Validation(); err != nil {
-		httputil.NewError(ctx, http.StatusBadRequest, err)
+		httputils.NewError(ctx, http.StatusBadRequest, err)
 		return
 	}
 
 	err := updateItemScheme.Update(id)
 
 	if err != nil {
-		httputil.NewError(ctx, http.StatusNotFound, err)
+		httputils.NewError(ctx, http.StatusNotFound, err)
 		return
 	}
 	ctx.JSON(http.StatusOK, updateItemScheme)
@@ -131,7 +131,7 @@ func (c *Controller) DeleteItemScheme(ctx *gin.Context) {
 	id := ctx.Param("itemscheme_id")
 	err := model.DeleteSchemeOne(id)
 	if err != nil {
-		httputil.NewError(ctx, http.StatusNotFound, err)
+		httputils.NewError(ctx, http.StatusNotFound, err)
 		return
 	}
 	ctx.JSON(http.StatusOK, id)
