@@ -5,9 +5,12 @@ import (
 	"log"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
+
 	"github.com/Oxynger/JournalApp/db"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type (
@@ -24,7 +27,7 @@ type JournalInfo struct {
 	Name string `bson:"name" json:"name" example:"scale_repair"`
 
 	// ID идентификатор журнала
-	ID interface{} `bson:"journal_id" json:"journal_id" example:"5c93e5621f23834a97aba93b"`
+	ID primitive.ObjectID `bson:"journal_id" json:"journal_id" example:"5c93e5621f23834a97aba93b"`
 
 	// Daily является ли журнал ежедневным
 	Daily bool `bson:"daily" json:"daily" example:"true"`
@@ -107,13 +110,25 @@ func journalCollection() *mongo.Collection {
 	return coll
 }
 
-// ListJournals godoc
-func ListJournals() ([]Journal, error) {
+// JournalsAll godoc
+func JournalsAll() (List []Journal, err error) {
 	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
-	var List []Journal
+	filter := bson.D{
+		{
+			Key:   "deleted",
+			Value: false,
+		},
+	}
 
-	cur, err := journalCollection().Find(timeout, bson.D{})
+	withoutFields := bson.D{
+		{Key: "deleted", Value: 0},
+	}
+
+	findOptions := options.Find()
+	findOptions.SetProjection(withoutFields)
+
+	cur, err := journalCollection().Find(timeout, filter, findOptions)
 
 	defer cur.Close(timeout)
 
@@ -140,4 +155,154 @@ func ListJournals() ([]Journal, error) {
 	}
 
 	return List, nil
+}
+
+func journalFindOne(id primitive.ObjectID) (journal *Journal, err error) {
+
+	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	filter := bson.D{
+		{
+			Key:   "deleted",
+			Value: false,
+		},
+		{
+			Key:   "_id",
+			Value: id,
+		},
+	}
+
+	withoutFields := bson.D{
+		{Key: "deleted", Value: 0},
+	}
+
+	findOneOptions := options.FindOne()
+	findOneOptions.SetProjection(withoutFields)
+
+	err = journalCollection().FindOne(timeout, filter, findOneOptions).Decode(&journal)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return journal, nil
+}
+
+// JournalOne godoc
+func JournalOne(id string) (journal *Journal, err error) {
+	journalID, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	journal, err = journalFindOne(journalID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return journal, nil
+}
+
+// JournalDelete godoc
+func JournalDelete(id string) (journal *Journal, err error) {
+	journalID, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	filter := bson.D{
+		{
+			Key:   "deleted",
+			Value: false,
+		},
+		{
+			Key:   "_id",
+			Value: journalID,
+		},
+	}
+
+	deleteSet := bson.D{
+		{
+			Key: "$set",
+			Value: bson.D{
+				{
+					Key:   "deleted",
+					Value: true,
+				},
+			},
+		},
+	}
+
+	journal, err = JournalOne(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = journalCollection().UpdateOne(timeout, filter, deleteSet)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return journal, nil
+}
+
+// AddJournal godoc
+func AddJournal(journal Journal) (*Journal, error) {
+	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
+
+	journal["deleted"] = false
+
+	insertedResault, err := journalCollection().InsertOne(timeout, journal)
+
+	if err != nil {
+		return nil, err
+	}
+
+	resaultJournal, err := journalFindOne(insertedResault.InsertedID.(primitive.ObjectID))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return resaultJournal, nil
+}
+
+// JournalUpdate godoc
+func JournalUpdate(id string, journal Journal) (*Journal, error) {
+	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
+
+	journalID, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	filter := bson.D{
+		{
+			Key:   "_id",
+			Value: journalID,
+		},
+	}
+
+	update := bson.D{
+		{
+			Key:   "$set",
+			Value: journal,
+		},
+	}
+
+	journalCollection().UpdateOne(timeout, filter, update)
+
+	resaultJournal, err := journalFindOne(journalID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return resaultJournal, nil
 }
