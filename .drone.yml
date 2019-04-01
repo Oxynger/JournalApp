@@ -2,15 +2,33 @@ kind: pipeline
 name: default
 
 steps:
-  - name: test
+  - name: init
     image: golang
+    volumes:
+      - name: deps
+        path: /go
     commands:
       - go get github.com/swaggo/swag/cmd/swag
       - swag init
+      - go get
+
+  - name: test
+    image: golang
+    volumes:
+      - name: deps
+        path: /go
+    commands:
       - go test -v
-      - go vet
-  
+
   - name: build
+    image: golang
+    volumes:
+      - name: deps
+        path: /go
+    commands:
+      - go build -o main
+  
+  - name: dockerize
     image: docker
     commands:
       - docker build -t reloc/journalapp .
@@ -20,8 +38,6 @@ steps:
     when:
       branch:
         - master
-      event:
-        - push
 
   - name: deploy
     image: docker/compose:1.23.2
@@ -44,10 +60,10 @@ steps:
     when:
       branch:
         - master
-      event:
-        - push
 
 volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
+  - name: deps
+    temp: {}
