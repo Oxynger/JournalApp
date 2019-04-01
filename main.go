@@ -49,15 +49,13 @@ func main() {
 		{
 			login.POST("", c.Auth)
 		}
-		journal := v1.Group("/journals")
+		journal := v1.Group("/journal")
 		{
 			journal.GET("", c.ListJouranls)
 			journal.GET(":journal_id", c.ShowJournal)
-			journal.GET(":journal_id/items", c.ListItemsInJournal)
-			journal.POST(":journal_id/items", c.AddItemToJournal)
-			journal.GET(":journal_id/items/:item_id", c.ShowItemInJournal)
-			journal.PUT(":journal_id/items/:item_id", c.SaveItemInJournal)
-			journal.DELETE(":journal_id/items/:item_id", c.DeleteItemFromJournal)
+			journal.POST("", c.AddJournal)
+			journal.PUT(":journal_id", c.UpdateJournal)
+			journal.DELETE(":journal_id", c.DeleteJournal)
 			journal.POST(":journal_id/items/signature", c.CloseJournal)
 		}
 		logs := v1.Group("/logs/tabletapp")

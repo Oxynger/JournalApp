@@ -12,6 +12,7 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/go-cmp v0.2.0 // indirect
+	github.com/mongodb/mongo-go-driver v1.0.0
 	github.com/swaggo/gin-swagger v1.1.0
 	github.com/swaggo/swag v1.5.0
 	github.com/tidwall/pretty v0.0.0-20190325153808-1166b9ac2b65 // indirect
