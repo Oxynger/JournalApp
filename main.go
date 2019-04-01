@@ -26,7 +26,7 @@ func init() {
 	swagdoc.SwaggerInfo.Host = conf.Host
 	swagdoc.SwaggerInfo.BasePath = "/api/v1"
 	swagdoc.SwaggerInfo.Title = "API приложения для составления журналов"
-	swagdoc.SwaggerInfo.Version = "0.1.0"
+	swagdoc.SwaggerInfo.Version = "1.0.0"
 	swagdoc.SwaggerInfo.Description = "Это сервер предоставляющий API для сервиса электронных журналов"
 
 }
@@ -53,11 +53,9 @@ func main() {
 		{
 			journal.GET("", c.ListJouranls)
 			journal.GET(":journal_id", c.ShowJournal)
-			journal.GET(":journal_id/items", c.ListItemsInJournal)
-			journal.POST(":journal_id/items", c.AddItemToJournal)
-			journal.GET(":journal_id/items/:item_id", c.ShowItemInJournal)
-			journal.PUT(":journal_id/items/:item_id", c.SaveItemInJournal)
-			journal.DELETE(":journal_id/items/:item_id", c.DeleteItemFromJournal)
+			journal.POST("", c.AddJournal)
+			journal.PUT(":journal_id", c.UpdateJournal)
+			journal.DELETE(":journal_id", c.DeleteJournal)
 			journal.POST(":journal_id/items/signature", c.CloseJournal)
 		}
 		logs := v1.Group("/logs/tabletapp")

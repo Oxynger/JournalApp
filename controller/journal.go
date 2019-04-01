@@ -1,6 +1,10 @@
 package controller
 
 import (
+	"net/http"
+
+	"github.com/Oxynger/JournalApp/httputils"
+	"github.com/Oxynger/JournalApp/model"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,6 +19,14 @@ import (
 // @Failure 500 {object} httputils.HTTPError
 // @Router /journal [get]
 func (c *Controller) ListJouranls(ctx *gin.Context) {
+	journals, err := model.JournalsAll()
+
+	if err != nil {
+		httputils.NewError(ctx, http.StatusNotFound, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, journals)
 }
 
 // ShowJournal Получение списка журналов
@@ -24,92 +36,107 @@ func (c *Controller) ListJouranls(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param journal_id path string true "Journal id"
-// @Success 200 {object} model.ListJournalItems
-// @Failure 400 {object} httputils.HTTPError
+// @Success 200 {object} model.Journal
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
 // @Router /journal/{journal_id} [get]
 func (c *Controller) ShowJournal(ctx *gin.Context) {
+	id := ctx.Param("journal_id")
+
+	journal, err := model.JournalOne(id)
+
+	if err != nil {
+		httputils.NewError(ctx, http.StatusNotFound, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, journal)
+
 }
 
-// ListItemsInJournal Получит все объекты журнала
-// @Summary Список объектов
-// @Description Получение списка объектов с которыми взамодействует журнал, доступных для добавления (используется только для журналов с флагом addition=1)
+// AddJournal Добавление журнала
+// @Summary Добавить журнал
+// @Description Добавление журнала.
+// @Tags Journal
+// @Accept  json
+// @Produce  json
+// @Param journal body model.Journal true "journal json"
+// @Success 200 {object} model.Journal
+// @Failure 400 {object} httputils.HTTPError
+// @Failure 404 {object} httputils.HTTPError
+// @Failure 500 {object} httputils.HTTPError
+// @Router /journal/ [post]
+func (c *Controller) AddJournal(ctx *gin.Context) {
+	var journal model.Journal
+
+	if err := ctx.ShouldBindJSON(&journal); err != nil {
+		httputils.NewError(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	resaultJournal, err := model.AddJournal(journal)
+	if err != nil {
+		httputils.NewError(ctx, http.StatusNotFound, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, resaultJournal)
+
+}
+
+// DeleteJournal Удаление журнала
+// @Summary Удлить журнал
+// @Description Удаление журнала. Установление deleted true
 // @Tags Journal
 // @Accept  json
 // @Produce  json
 // @Param journal_id path string true "Journal id"
-// @Success 200 {array} model.Item
-// @Failure 400 {object} httputils.HTTPError
+// @Success 200 {object} model.Journal
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
-// @Router /journal/{journal_id}/items [get]
-func (c *Controller) ListItemsInJournal(ctx *gin.Context) {
+// @Router /journal/{journal_id} [delete]
+func (c *Controller) DeleteJournal(ctx *gin.Context) {
+	id := ctx.Param("journal_id")
+
+	journal, err := model.JournalDelete(id)
+
+	if err != nil {
+		httputils.NewError(ctx, http.StatusNotFound, err)
+	}
+
+	ctx.JSON(http.StatusOK, journal)
 }
 
-// AddItemToJournal Добавить объект
-// @Summary Добавить объект
-// @Description Добавление позиции в журнал (используется только для журналов с флагом addition=1).
+// UpdateJournal Изменеие журнала
+// @Summary Изменить журнал
+// @Description Изменение журнала.
 // @Tags Journal
 // @Accept  json
 // @Produce  json
-// @Param item body model.Item true "Item"
+// @Param journal body model.Journal true "journal json"
 // @Param journal_id path string true "Journal id"
-// @Success 200 {object} model.Item
+// @Success 200 {object} model.Journal
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
-// @Router /journal/{journal_id}/items [post]
-func (c *Controller) AddItemToJournal(ctx *gin.Context) {
-}
+// @Router /journal/{journal_id} [put]
+func (c *Controller) UpdateJournal(ctx *gin.Context) {
+	id := ctx.Param("journal_id")
+	var journal model.Journal
 
-// ShowItemInJournal Получить объект
-// @Summary Получить объект
-// @Description Получение определенного объекта из журнала.
-// @Tags Journal
-// @Accept  json
-// @Produce  json
-// @Param item_id path string true "Item id"
-// @Param journal_id path string true "Journal id"
-// @Success 200 {object} model.JournalItem
-// @Failure 400 {object} httputils.HTTPError
-// @Failure 404 {object} httputils.HTTPError
-// @Failure 500 {object} httputils.HTTPError
-// @Router /journal/{journal_id}/items/{item_id} [get]
-func (c *Controller) ShowItemInJournal(ctx *gin.Context) {
-}
+	if err := ctx.ShouldBindJSON(&journal); err != nil {
+		httputils.NewError(ctx, http.StatusBadRequest, err)
+		return
+	}
 
-// SaveItemInJournal Сохранение журнала
-// @Summary Сохранить журнал
-// @Description Сохранение внесенной информации об определенном объекте в журнал.
-// @Tags Journal
-// @Accept  json
-// @Produce  json
-// @Param item body model.BlockArray true "Item"
-// @Param item_id path string true "Item id"
-// @Param journal_id path string true "Journal id"
-// @Success 200 {integer} int "Было ли завершено заполнение позиции сегодня -1 ─ была коректировка"
-// @Failure 400 {object} httputils.HTTPError
-// @Failure 404 {object} httputils.HTTPError
-// @Failure 500 {object} httputils.HTTPError
-// @Router /journal/{journal_id}/items/{item_id} [put]
-func (c *Controller) SaveItemInJournal(ctx *gin.Context) {
-}
+	resaultJournal, err := model.JournalUpdate(id, journal)
 
-// DeleteItemFromJournal Удаление объекта
-// @Summary Удлить объект
-// @Description Удаление итема из журнала. Удаление доступно только для итемов журнала, у которого есть возможность добавления.
-// @Tags Journal
-// @Accept  json
-// @Produce  json
-// @Param item_id path string true "Item id"
-// @Param journal_id path string true "Journal id"
-// @Success 200 {object} model.Item
-// @Failure 400 {object} httputils.HTTPError
-// @Failure 404 {object} httputils.HTTPError
-// @Failure 500 {object} httputils.HTTPError
-// @Router /journal/{journal_id}/items/{item_id} [delete]
-func (c *Controller) DeleteItemFromJournal(ctx *gin.Context) {
+	if err != nil {
+		httputils.NewError(ctx, http.StatusNotFound, err)
+	}
+
+	ctx.JSON(http.StatusOK, resaultJournal)
+
 }
 
 // CloseJournal Добавить роспись
