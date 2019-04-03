@@ -51,7 +51,7 @@ type UpdateItemScheme struct {
 	Name    string      `bson:"name" json:"name" example:"scale"`
 	Title   string      `bson:"title" json:"title" example:"Весы"`
 	Fields  []ItemField `bson:"fields" json:"fields"`
-	Deleted bool        `bson:"deleted" json:"-" example: -`
+	Deleted bool        `bson:"deleted" json:"-"`
 }
 
 // Insert godoc
