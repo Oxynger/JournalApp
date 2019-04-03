@@ -150,6 +150,7 @@ func (c *Controller) UpdateJournal(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
-// @Router /journal/{journal_id}/signature [put]
+// @Router /journal/{journal_id}/signature [POST]
 func (c *Controller) CloseJournal(ctx *gin.Context) {
+	httputils.Blank(ctx)
 }

@@ -1,6 +1,9 @@
 package controller
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/Oxynger/JournalApp/httputils"
+	"github.com/gin-gonic/gin"
+)
 
 // AddTablelog Сохранение логов
 // @Summary Сохранение логов
@@ -15,4 +18,5 @@ import "github.com/gin-gonic/gin"
 // @Failure 500 {object} httputils.HTTPError
 // @Router /logs/tabletapp [post]
 func (c *Controller) AddTablelog(ctx *gin.Context) {
+	httputils.Blank(ctx)
 }
