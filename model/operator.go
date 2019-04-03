@@ -2,7 +2,6 @@ package model
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -18,22 +17,15 @@ import (
 // Operator соотвествует сущности controller.
 type Operator struct {
 	db.Model
-	FirstName  string `bson:"first_name" json:"first_name" example:"Олег"`
-	MiddleName string `bson:"middle_name" json:"middle_name" example:"Олеговичь"`
-	LastName   string `bson:"last_name" json:"last_name" example:"Олегов"`
-	Password   []byte `bson:"password" json:"password" example:"qwert"`
+	FirstName  string      `bson:"first_name" json:"first_name" example:"Олег"`
+	MiddleName string      `bson:"middle_name" json:"middle_name" example:"Олегович"`
+	LastName   string      `bson:"last_name" json:"last_name" example:"Олегов"`
+	Password   interface{} `bson:"password" json:"password" swaggertype:"string" example:"qwert"`
 }
 
 // HashPassword encrypts operator password
 func (o *Operator) HashPassword() error {
-	var pwd interface{}
-
-	pwd = o.Password
-	convertPwd, ok := pwd.([]byte)
-
-	if ok == false {
-		return errors.New("Not correct password")
-	}
+	convertPwd := []byte(o.Password.(string))
 
 	password, err := bcrypt.GenerateFromPassword(convertPwd, bcrypt.DefaultCost)
 	o.Password = password

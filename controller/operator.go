@@ -55,7 +55,7 @@ func (c *Controller) ShowOperator(ctx *gin.Context) {
 }
 
 // AddOperator Добавление котнроллера
-// @Summary Добавить журнал
+// @Summary Добавить контроллера
 // @Description Добавление котнроллера.
 // @Tags Operator
 // @Accept  json
@@ -77,7 +77,7 @@ func (c *Controller) AddOperator(ctx *gin.Context) {
 	err := operator.HashPassword()
 
 	if err != nil {
-		httputils.NewError(ctx, http.StatusOK, err)
+		httputils.NewError(ctx, http.StatusBadRequest, err)
 		return
 	}
 
