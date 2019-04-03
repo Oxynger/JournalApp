@@ -56,7 +56,7 @@ func main() {
 			journal.POST("", c.AddJournal)
 			journal.PUT(":journal_id", c.UpdateJournal)
 			journal.DELETE(":journal_id", c.DeleteJournal)
-			journal.POST(":journal_id/items/signature", c.CloseJournal)
+			journal.POST(":journal_id/signature", c.CloseJournal)
 		}
 		operator := v1.Group("/controller")
 		{
