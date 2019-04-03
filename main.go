@@ -51,13 +51,22 @@ func main() {
 		}
 		journal := v1.Group("/journal")
 		{
-			journal.GET("", c.ListJouranls)
+			journal.GET("", c.ListJournals)
 			journal.GET(":journal_id", c.ShowJournal)
 			journal.POST("", c.AddJournal)
 			journal.PUT(":journal_id", c.UpdateJournal)
 			journal.DELETE(":journal_id", c.DeleteJournal)
 			journal.POST(":journal_id/items/signature", c.CloseJournal)
 		}
+		operator := v1.Group("/controller")
+		{
+			operator.GET("", c.ListOperators)
+			operator.GET(":operator_id", c.ShowOperator)
+			operator.POST("", c.AddOperator)
+			operator.PUT(":operator_id", c.UpdateOperator)
+			operator.DELETE(":operator_id", c.DeleteOperator)
+		}
+
 		logs := v1.Group("/logs/tabletapp")
 		{
 			logs.POST("", c.AddTablelog)
