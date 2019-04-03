@@ -111,7 +111,7 @@ func journalCollection() *mongo.Collection {
 }
 
 // JournalsAll godoc
-func JournalsAll() (List []Journal, err error) {
+func JournalsAll() (list []Journal, err error) {
 	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
 	filter := bson.D{
@@ -146,7 +146,7 @@ func JournalsAll() (List []Journal, err error) {
 			return nil, err
 		}
 
-		List = append(List, resault)
+		list = append(list, resault)
 	}
 
 	if err := cur.Err(); err != nil {
@@ -154,7 +154,7 @@ func JournalsAll() (List []Journal, err error) {
 		return nil, err
 	}
 
-	return List, nil
+	return list, nil
 }
 
 func journalFindOne(id primitive.ObjectID) (journal *Journal, err error) {
