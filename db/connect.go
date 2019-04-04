@@ -16,6 +16,7 @@ var (
 
 const ()
 
+// Client godoc
 func Client() mongo.Client {
 	return client
 }

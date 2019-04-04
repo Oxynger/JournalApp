@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// ListJouranls Получить все журналы
+// ListJournals Получить все журналы
 // @Summary Список журналов
 // @Description Получение списка журналов
 // @Tags Journal
@@ -18,7 +18,7 @@ import (
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
 // @Router /journal [get]
-func (c *Controller) ListJouranls(ctx *gin.Context) {
+func (c *Controller) ListJournals(ctx *gin.Context) {
 	journals, err := model.JournalsAll()
 
 	if err != nil {
@@ -29,9 +29,9 @@ func (c *Controller) ListJouranls(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, journals)
 }
 
-// ShowJournal Получение списка журналов
-// @Summary Список журналов
-// @Description Получение списка журналов
+// ShowJournal Получение кокретного журнала
+// @Summary Один журнал
+// @Description Получение кокретного журнала
 // @Tags Journal
 // @Accept  json
 // @Produce  json
@@ -65,7 +65,7 @@ func (c *Controller) ShowJournal(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
-// @Router /journal/ [post]
+// @Router /journal [post]
 func (c *Controller) AddJournal(ctx *gin.Context) {
 	var journal model.Journal
 
@@ -150,6 +150,7 @@ func (c *Controller) UpdateJournal(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
-// @Router /journal/{journal_id}/signature [put]
+// @Router /journal/{journal_id}/signature [POST]
 func (c *Controller) CloseJournal(ctx *gin.Context) {
+	httputils.Blank(ctx)
 }
