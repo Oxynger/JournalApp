@@ -1,9 +1,12 @@
 package main
 
 import (
+	"errors"
+
 	"github.com/Oxynger/JournalApp/config"
 	"github.com/Oxynger/JournalApp/controller"
 	"github.com/Oxynger/JournalApp/db"
+	"github.com/Oxynger/JournalApp/httputils"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
@@ -31,10 +34,28 @@ func init() {
 
 }
 
+func journalWrapper(AuthToken string, c *controller.Controller) gin.HandlerFunc {
+	switch AuthToken {
+	case "admin":
+		return c.ShowJournal
+
+	case "controller":
+		return c.ListJournals
+
+	default:
+		return func(ctx *gin.Context) {
+			httputils.NewError(ctx, 400, errors.New("Token not correct"))
+		}
+	}
+
+}
 func main() {
 	router := gin.Default()
 	c := controller.New()
 
+	AuthToken := "admin"
+
+	router.GET("/journal", journalWrapper(AuthToken, c))
 	v1 := router.Group("/api/v1")
 	{
 		itemScheme := v1.Group("/scheme")
