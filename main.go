@@ -3,8 +3,6 @@ package main
 import (
 	"github.com/gin-contrib/cors"
 
-	"fmt"
-
 	"github.com/Oxynger/JournalApp/config"
 	"github.com/Oxynger/JournalApp/controller"
 	"github.com/Oxynger/JournalApp/db"
@@ -38,18 +36,7 @@ func init() {
 func main() {
 	router := gin.Default()
 
-	configCORS := cors.DefaultConfig()
-
-	configCORS.AllowOrigins = []string{"http://127.0.0.1:8080"}
-	configCORS.AllowCredentials = true
-
-	router.Use(cors.New(configCORS))
-
-	router.Use(func(c *gin.Context){
-		fmt.Println(c.Request.Header)
-
-		c.Next()
-	})
+	router.Use(cors.Default())
 
 	c := controller.New()
 
