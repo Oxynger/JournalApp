@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
+
 	"github.com/Oxynger/JournalApp/config"
 	"github.com/Oxynger/JournalApp/controller"
 	"github.com/Oxynger/JournalApp/db"
@@ -26,13 +28,16 @@ func init() {
 	swagdoc.SwaggerInfo.Host = conf.Host
 	swagdoc.SwaggerInfo.BasePath = "/api/v1"
 	swagdoc.SwaggerInfo.Title = "API приложения для составления журналов"
-	swagdoc.SwaggerInfo.Version = "1.1.0"
+	swagdoc.SwaggerInfo.Version = "1.1.1"
 	swagdoc.SwaggerInfo.Description = "Это сервер предоставляющий API для сервиса электронных журналов"
 
 }
 
 func main() {
 	router := gin.Default()
+
+	router.Use(cors.Default())
+
 	c := controller.New()
 
 	v1 := router.Group("/api/v1")

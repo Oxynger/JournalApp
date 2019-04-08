@@ -154,8 +154,9 @@ func ItemSchemeAll() ([]ItemScheme, error) {
 	}
 	defer cur.Close(context.Background())
 	listSchemes := []ItemScheme{}
-	row := new(ItemScheme)
+
 	for cur.Next(context.Background()) {
+		row := new(ItemScheme)
 		err := cur.Decode(&row)
 		if err != nil {
 			log.Println(err)
