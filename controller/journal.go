@@ -65,7 +65,7 @@ func (c *Controller) ShowJournal(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
-// @Router /journal/ [post]
+// @Router /journal [post]
 func (c *Controller) AddJournal(ctx *gin.Context) {
 	var journal model.Journal
 

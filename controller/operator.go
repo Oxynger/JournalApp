@@ -65,7 +65,7 @@ func (c *Controller) ShowOperator(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
-// @Router /controller/ [post]
+// @Router /controller [post]
 func (c *Controller) AddOperator(ctx *gin.Context) {
 	var operator model.Operator
 
