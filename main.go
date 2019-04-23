@@ -23,7 +23,7 @@ var (
 
 func init() {
 	conf = config.New()
-	db.Connect(conf.MongoURI)
+	db.Connect(conf)
 
 	swagdoc.SwaggerInfo.Host = conf.Host
 	swagdoc.SwaggerInfo.BasePath = "/api/v1"
