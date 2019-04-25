@@ -1,4 +1,4 @@
-package controller
+package api
 
 import (
 	"github.com/Oxynger/JournalApp/httputils"
@@ -17,6 +17,6 @@ import (
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
 // @Router /logs/tabletapp [post]
-func (c *Controller) AddTablelog(ctx *gin.Context) {
+func AddTablelog(ctx *gin.Context) {
 	httputils.Blank(ctx)
 }

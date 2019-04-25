@@ -1,4 +1,4 @@
-package controller
+package operator
 
 import (
 	"net/http"
@@ -17,8 +17,9 @@ import (
 // @Success 200 {array} model.Operator
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
+// @Security Authorization
 // @Router /controller [get]
-func (c *Controller) ListOperators(ctx *gin.Context) {
+func ListOperators(ctx *gin.Context) {
 	operators, err := model.OperatorsAll()
 
 	if err != nil {
@@ -39,8 +40,9 @@ func (c *Controller) ListOperators(ctx *gin.Context) {
 // @Success 200 {object} model.Operator
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
+// @Security Authorization
 // @Router /controller/{operator_id} [get]
-func (c *Controller) ShowOperator(ctx *gin.Context) {
+func ShowOperator(ctx *gin.Context) {
 	id := ctx.Param("operator_id")
 
 	operator, err := model.OperatorOne(id)
@@ -65,8 +67,9 @@ func (c *Controller) ShowOperator(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
+// @Security Authorization
 // @Router /controller [post]
-func (c *Controller) AddOperator(ctx *gin.Context) {
+func AddOperator(ctx *gin.Context) {
 	var operator model.Operator
 
 	if err := ctx.ShouldBindJSON(&operator); err != nil {
@@ -102,8 +105,9 @@ func (c *Controller) AddOperator(ctx *gin.Context) {
 // @Success 200 {object} model.Operator
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
+// @Security Authorization
 // @Router /controller/{operator_id} [delete]
-func (c *Controller) DeleteOperator(ctx *gin.Context) {
+func DeleteOperator(ctx *gin.Context) {
 	id := ctx.Param("operator_id")
 
 	operator, err := model.OperatorDelete(id)
@@ -127,8 +131,9 @@ func (c *Controller) DeleteOperator(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
+// @Security Authorization
 // @Router /controller/{operator_id} [put]
-func (c *Controller) UpdateOperator(ctx *gin.Context) {
+func UpdateOperator(ctx *gin.Context) {
 	id := ctx.Param("operator_id")
 	var operator model.Operator
 
