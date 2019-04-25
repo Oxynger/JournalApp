@@ -11,5 +11,5 @@ const message string = "Этот метод API ещё не реализован
 
 // Blank создание заглушки
 func Blank(ctx *gin.Context) {
-	NewError(ctx, http.StatusOK, errors.New(message))
+	NewError(ctx, http.StatusNotImplemented, errors.New(message))
 }
