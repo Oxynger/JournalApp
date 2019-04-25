@@ -13,10 +13,10 @@ import (
 // Login используется для авторизации
 // @Summary Авторизация на сервере
 // @Description Авторизация на сервере
-// @Accept  json
-// @Produce  json
-// @Param credentials body model.Credentials true "credentials json"
-// @Success 200 {string} model.User
+// @Accept json
+// @Produce json
+// @Param credentials body user.Credentials true "credentials json"
+// @Success 200 {string} object
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
 // @Router /login [post]
@@ -27,9 +27,9 @@ func Login(ctx *gin.Context) {
 		return
 	}
 
-	users := userCollection()
+	//users := userCollection()
 
-	ctx.JSON(http.StatusOK, gin.H{"token": "authentication successful"})
+	ctx.JSON(http.StatusOK, gin.H{"token": ""})
 }
 
 func userCollection() *mongo.Collection {
