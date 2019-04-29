@@ -47,6 +47,7 @@ func RegisterV1(v1 *gin.RouterGroup) {
 	{
 		logs.POST("", AddTablelog)
 	}
+	v1.POST("/login", Login)
 }
 
 // RegisterV2 добавляет роутинг для эндпоинтов на /api/v2

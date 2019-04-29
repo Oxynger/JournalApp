@@ -3,15 +3,13 @@ package api
 import (
 	"net/http"
 
-	"github.com/Oxynger/JournalApp/db"
 	"github.com/Oxynger/JournalApp/httputils"
 	"github.com/Oxynger/JournalApp/model/user"
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // Login используется для авторизации
-// @Summary Авторизация на сервере
+// @Summary Авторизация на сервере (WIP)
 // @Description Авторизация на сервере
 // @Accept json
 // @Produce json
@@ -27,12 +25,5 @@ func Login(ctx *gin.Context) {
 		return
 	}
 
-	//users := userCollection()
-
 	ctx.JSON(http.StatusOK, gin.H{"token": ""})
-}
-
-func userCollection() *mongo.Collection {
-	client := db.Client()
-	return client.Database("test").Collection("Users")
 }
