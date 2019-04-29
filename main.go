@@ -5,9 +5,14 @@ import (
 
 	"github.com/gin-contrib/cors"
 
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/memstore"
+
+
 	"github.com/Oxynger/JournalApp/api"
 	"github.com/Oxynger/JournalApp/config"
 	"github.com/Oxynger/JournalApp/db"
+	"github.com/Oxynger/JournalApp/service"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
@@ -36,7 +41,10 @@ func init() {
 
 func main() {
 	router := gin.Default()
+	store := memstore.NewStore([]byte("authtest"))
 	router.Use(cors.Default())
+	router.Use(sessions.Sessions("X-Auth-Token", store))
+	router.Use(api.Auth(service.NewUserService()))
 
 	api.RegisterV1(router.Group("/api/v1"))
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"log"
 	"time"
 
@@ -10,6 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService struct {
@@ -31,6 +33,8 @@ func userCollection() *mongo.Collection {
 }
 
 func (srv *UserService) Create(u user.User) error {
+	hash, _ := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+	u.Password = string(hash)
 	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	_, err := srv.collection.InsertOne(timeout, u)
 	return err
@@ -51,4 +55,15 @@ func (srv *UserService) FindByUsername(username string) (result *user.User, err 
 		return nil, err
 	}
 	return
+}
+
+func (srv *UserService) Authenticate(cred user.Credentials) (*string, error) {
+	incorrectCreds := errors.New("incorrect login or password")
+	user, err := srv.FindByUsername(cred.Username)
+	if err != nil {
+		return nil, incorrectCreds
+	}
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(cred.Password)); err != nil {
+		return nil, incorrectCreds
+	}
 }
