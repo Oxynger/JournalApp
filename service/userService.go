@@ -16,10 +16,14 @@ import (
 
 type UserService struct {
 	collection *mongo.Collection
+	sessions   *SessionService
 }
 
 func NewUserService() *UserService {
-	u := UserService{userCollection()}
+	u := UserService{
+		collection: userCollection(),
+		sessions:   NewSessionService(),
+	}
 	_, err := u.collection.Indexes().CreateOne(context.Background(), user.UserIndexModel())
 	if err != nil {
 		log.Fatal(err)
@@ -33,16 +37,20 @@ func userCollection() *mongo.Collection {
 }
 
 func (srv *UserService) Create(u user.User) error {
-	hash, _ := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+	hash, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
 	u.Password = string(hash)
+
 	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	_, err := srv.collection.InsertOne(timeout, u)
+	_, err = srv.collection.InsertOne(timeout, u)
 	return err
 }
 
-func (srv *UserService) FindByUsername(username string) (result *user.User, err error) {
+func (srv *UserService) findByUsername(username string) (*user.User, bool) {
+	var result *user.User
 	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
-
 	filter := bson.D{{Key: "username", Value: username}}
 	withoutFields := bson.D{
 		{Key: "_id", Value: 0},
@@ -51,19 +59,23 @@ func (srv *UserService) FindByUsername(username string) (result *user.User, err 
 	}
 	findOneOptions := options.FindOne().SetProjection(withoutFields)
 
-	if err = srv.collection.FindOne(timeout, filter, findOneOptions).Decode(&result); err != nil {
-		return nil, err
+	if err := srv.collection.FindOne(timeout, filter, findOneOptions).Decode(&result); err != nil {
+		return nil, false
 	}
-	return
+	return result, true
 }
 
-func (srv *UserService) Authenticate(cred user.Credentials) (*string, error) {
-	incorrectCreds := errors.New("incorrect login or password")
-	user, err := srv.FindByUsername(cred.Username)
-	if err != nil {
-		return nil, incorrectCreds
+func (srv *UserService) Authenticate(creds user.Credentials) (*user.User, error) {
+	usr, ok := srv.findByUsername(creds.Username)
+	if !ok || comparePasswords(usr.Password, creds.Password) {
+		return nil, errors.New("Wrong username or password")
 	}
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(cred.Password)); err != nil {
-		return nil, incorrectCreds
+	return usr, nil
+}
+
+func comparePasswords(expectedPassword, givenPassword string) bool {
+	if err := bcrypt.CompareHashAndPassword([]byte(expectedPassword), []byte(givenPassword)); err != nil {
+		return false
 	}
+	return true
 }
