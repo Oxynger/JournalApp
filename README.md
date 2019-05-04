@@ -21,7 +21,7 @@ $ go run ./main.go
 
 - `go get`: Получение зависимостей
 - `go get -u github.com/swaggo/swag/cmd/swag`: Установка swag для генерации документации
-- `PATH=PATH:<Path/to/go/bin>`(optional): Добавить бинарные файлы go где храниться собранная swag утилита.
+- `PATH=$PATH:<Path/to/go/bin>`(optional): Добавить бинарные файлы go где храниться собранная swag утилита.
 - `swag init`: Генерация swagger файлов для оображения документации
 - `go run ./main.go`: Запуск сервера
 - `go build ./main.go`: Компиляция бинарного файла
