@@ -1,26 +1,36 @@
 package user
 
+//go:generate stringer -type Role
+
 import (
-	"github.com/Oxynger/JournalApp/db"
-	"go.mongodb.org/mongo-driver/bson"
+	"encoding/json"
+
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type Role string
+type Role int
+
+const (
+	Operator Role = iota
+	Administrator
+	Helpdesk
+)
 
 type User struct {
-	db.Model `bson:"inline"`
 	ID       *primitive.ObjectID `json:"ID" bson:"_id,omitempty"`
-	Username string              `bson:"username" json:"username" binding:"required"`
-	Password string              `bson:"password" json:"password" binding:"required"`
-	Role     Role
+	Username string              `bson:"username" json:"username"`
+	Password string              `bson:"password" json:"password"`
+	Role     Role                `bson:"role" json:"role"`
 }
 
-func UserIndexModel() mongo.IndexModel {
-	return mongo.IndexModel{
-		Keys:    bson.D{{Key: "username", Value: 1}},
-		Options: options.Index().SetUnique(true),
+func (usr User) MarshalJSON() ([]byte, error) {
+	temp := struct {
+		Username string `json:"username"`
+		Role     Role   `json:"role"`
+	}{
+		usr.Username,
+		usr.Role,
 	}
+
+	return json.Marshal(&temp)
 }
