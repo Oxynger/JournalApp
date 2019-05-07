@@ -5,22 +5,24 @@ package user
 import (
 	"encoding/json"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	uuid "github.com/satori/go.uuid"
 )
 
 type Role int
 
 const (
-	Operator Role = iota
+	Anonymous Role = iota
 	Administrator
+	Constructor
+	Operator
 	Helpdesk
 )
 
 type User struct {
-	ID       *primitive.ObjectID `json:"ID" bson:"_id,omitempty"`
-	Username string              `bson:"username" json:"username"`
-	Password string              `bson:"password" json:"password"`
-	Role     Role                `bson:"role" json:"role"`
+	ID       uuid.UUID `bson:"userid,omitempty" json:"ID" `
+	Username string    `bson:"username" json:"username"`
+	Password string    `bson:"password" json:"password"`
+	Role     Role      `bson:"role" json:"role"`
 }
 
 func (usr User) MarshalJSON() ([]byte, error) {
