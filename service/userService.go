@@ -41,6 +41,7 @@ func (srv *UserService) Create(u user.User) error {
 	if err != nil {
 		return err
 	}
+
 	u.Password = string(hash)
 
 	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)

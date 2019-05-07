@@ -30,13 +30,11 @@ func isEmptyMongoUser(mognoUser options.Credential) bool {
 	return mognoUser.Username == ""
 }
 
-func authOptions() (connectOptions *options.ClientOptions) {
-	auth := authorizeMongoUser(viper.Get("MONGODB_ROOT_USERNAME").(string), viper.Get("MONGODB_ROOT_PASSWORD").(string))
-
+func authOptions(mongoUri string, auth options.Credential) (connectOptions *options.ClientOptions) {
 	if isEmptyMongoUser(auth) {
-		connectOptions = options.Client().ApplyURI(viper.Get("mongodb_uri").(string))
+		connectOptions = options.Client().ApplyURI(mongoUri)
 	} else {
-		connectOptions = options.Client().ApplyURI(viper.Get("mongodb_uri").(string)).SetAuth(auth)
+		connectOptions = options.Client().ApplyURI(mongoUri).SetAuth(auth)
 	}
 
 	return connectOptions
@@ -44,10 +42,15 @@ func authOptions() (connectOptions *options.ClientOptions) {
 }
 
 // Connect Получает инстанс подключения к базе данных
-func Connect() {
+func Connect(mongoUri string) {
 	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
-	connectOptions := authOptions()
+	auth := authorizeMongoUser(
+		viper.GetString("mongodb_root_username"),
+		viper.GetString("mongodb_root_password"),
+	)
+
+	connectOptions := authOptions(mongoUri, auth)
 
 	connect, err := mongo.Connect(timeout, connectOptions)
 

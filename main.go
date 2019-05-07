@@ -31,7 +31,7 @@ func init() {
 	viper.AutomaticEnv()
 	viper.SetDefault("mongodb_uri", "mongodb://localhost:27017")
 	viper.SetDefault("port", "8080")
-	viper.SetDefault("host_domain", "localhost")
+	viper.SetDefault("host", "localhost")
 
 	db.Connect(viper.GetString("mongodb_uri"))
 
