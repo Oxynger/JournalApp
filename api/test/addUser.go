@@ -29,12 +29,14 @@ func AddUser(users *service.UserService) gin.HandlerFunc {
 			return
 		}
 
-		err := users.Create(user.User{
+		usr := user.User{
 			ID:       uuid.NewV4(),
 			Username: creds.Username,
 			Password: creds.Password,
 			Role:     user.Administrator,
-		})
+		}
+
+		err := users.Create(usr)
 		if err != nil {
 			httputils.NewError(ctx, http.StatusUnauthorized, err)
 		}
