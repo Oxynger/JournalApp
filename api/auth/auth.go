@@ -17,7 +17,7 @@ func RequireAuthorization(srv *service.SessionService, requiredRole user.Role) g
 			httputils.NewError(ctx, http.StatusUnauthorized, errors.New("X-Auth-Token header is required"))
 			ctx.Abort()
 		}
-		if srv.VerifyToken(token) {
+		if srv.Verify(token, requiredRole) {
 			httputils.NewError(ctx, http.StatusUnauthorized, errors.New("Token is expired or invalid"))
 			ctx.Abort()
 		}

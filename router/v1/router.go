@@ -1,21 +1,35 @@
-package router
+package v1
+
+//go:generate swag init
 
 import (
 	"github.com/Oxynger/JournalApp/api"
-	"github.com/Oxynger/JournalApp/api/auth"
 	"github.com/Oxynger/JournalApp/api/itemScheme"
 	"github.com/Oxynger/JournalApp/api/journal"
 	"github.com/Oxynger/JournalApp/api/operator"
-	"github.com/Oxynger/JournalApp/model/user"
-	"github.com/Oxynger/JournalApp/service"
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
+
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
+
+	swagdoc "github.com/Oxynger/JournalApp/router/v1/docs"
 )
 
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+
+// @securityDefinitions.apikey Authorization
+// @in header
+// @name X-Auth-Token
+
 // V1 добавляет роутинг для эндпоинтов на /api/v1
-func V1(router *gin.RouterGroup, userService *service.UserService, sessionService *service.SessionService) {
+func RegisterRoutes(router *gin.RouterGroup) {
+	setupSwaggerDocs(router)
+
 	itemSchemeGroup := router.Group("/scheme")
 	{
-		itemSchemeGroup.Use(auth.RequireAuthorization(sessionService, user.Helpdesk))
 		itemSchemeGroup.GET("/item", itemScheme.GetItemSchemes)
 		itemSchemeGroup.GET("/item/:itemscheme_id", itemScheme.GetItemScheme)
 		itemSchemeGroup.POST("/item", itemScheme.NewItemScheme)
@@ -24,7 +38,6 @@ func V1(router *gin.RouterGroup, userService *service.UserService, sessionServic
 	}
 	journalGroup := router.Group("/journal")
 	{
-		journalGroup.Use(auth.RequireAuthorization(sessionService, user.Administrator))
 		journalGroup.GET("", journal.ListJournals)
 		journalGroup.GET(":journal_id", journal.ShowJournal)
 		journalGroup.POST("", journal.AddJournal)
@@ -34,7 +47,6 @@ func V1(router *gin.RouterGroup, userService *service.UserService, sessionServic
 	}
 	operatorGroup := router.Group("/controller")
 	{
-		operatorGroup.Use(auth.RequireAuthorization(sessionService, user.Administrator))
 		operatorGroup.GET("", operator.ListOperators)
 		operatorGroup.GET(":operator_id", operator.ShowOperator)
 		operatorGroup.POST("", operator.AddOperator)
@@ -45,6 +57,15 @@ func V1(router *gin.RouterGroup, userService *service.UserService, sessionServic
 	{
 		logs.POST("", api.AddTablelog)
 	}
-	router.POST("/login", auth.LogIn(userService, sessionService))
-	router.POST("/logout", auth.LogOut(sessionService))
+}
+
+func setupSwaggerDocs(router *gin.RouterGroup) {
+	swaggerHost := viper.GetString("host") + ":" + viper.GetString("port")
+	swagdoc.SwaggerInfo.Host = swaggerHost
+	swagdoc.SwaggerInfo.BasePath = "/api/v1"
+	swagdoc.SwaggerInfo.Title = "API приложения для составления журналов"
+	swagdoc.SwaggerInfo.Version = "1.1.1"
+	swagdoc.SwaggerInfo.Description = "Это сервер предоставляющий API для сервиса электронных журналов"
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }

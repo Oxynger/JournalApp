@@ -12,9 +12,7 @@ import (
 // @Description Завершение сессии пользователей
 // @Accept json
 // @Produce json
-// @Param user body user.User true "user json"
 // @Success 200 {string} object
-// @Failure 400 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
 // @Router /logout [get]
 func LogOut(srv *service.SessionService) gin.HandlerFunc {

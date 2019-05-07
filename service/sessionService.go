@@ -27,12 +27,12 @@ func NewSessionService() *SessionService {
 	}
 }
 
-func (srv *SessionService) VerifyToken(token string) bool {
+func (srv *SessionService) Verify(token string, accessLevel user.Role) bool {
 	srv.lock.RLock()
 	defer srv.lock.RUnlock()
 
 	session, ok := srv.sessions[token]
-	if !ok || session.ExpireAt < time.Now().Unix() {
+	if !ok || session.ExpireAt < time.Now().Unix() || session.Role != accessLevel {
 		return false
 	}
 	return true

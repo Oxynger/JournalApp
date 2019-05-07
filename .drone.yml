@@ -9,8 +9,8 @@ steps:
         path: /go
     commands:
       - go get github.com/swaggo/swag/cmd/swag
-      - swag init
-      - go get
+      - go get golang.org/x/tools/cmd/stringer
+      - go generate ./...
 
   - name: test
     image: golang

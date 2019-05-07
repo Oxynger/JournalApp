@@ -16,14 +16,10 @@ import (
 
 type UserService struct {
 	collection *mongo.Collection
-	sessions   *SessionService
 }
 
 func NewUserService() *UserService {
-	u := UserService{
-		collection: userCollection(),
-		sessions:   NewSessionService(),
-	}
+	u := UserService{userCollection()}
 	_, err := u.collection.Indexes().CreateOne(context.Background(), user.UserIndexModel())
 	if err != nil {
 		log.Fatal(err)

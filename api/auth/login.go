@@ -9,11 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Token struct {
-	Token    string `json:"token"`
-	ExpireAt int64  `json:"expiresAt"`
-}
-
 // LogIn используется для авторизации
 // @Summary Авторизация на сервере (WIP)
 // @Description Авторизация на сервере
@@ -42,9 +37,6 @@ func LogIn(users *service.UserService, sessions *service.SessionService) gin.Han
 			httputils.NewError(ctx, http.StatusUnauthorized, err)
 		}
 
-		ctx.JSON(http.StatusOK, Token{
-			Token:    session.Token,
-			ExpireAt: session.ExpireAt,
-		})
+		ctx.JSON(http.StatusOK, session)
 	}
 }
