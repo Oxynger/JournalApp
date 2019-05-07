@@ -38,7 +38,7 @@ func RegisterRoutes(router *gin.RouterGroup, services Dependencies) {
 	setupSwaggerDocs(router)
 
 	router.POST("/login", auth.LogIn(services.Users, services.Sessions))
-	router.POST("/user", test.AddUser(services.Users))
+	router.POST("/test/user", test.AddUser(services.Users))
 	router.GET("/logout", auth.LogOut(services.Sessions))
 
 	adminGroup := router.Group("/administrator")
