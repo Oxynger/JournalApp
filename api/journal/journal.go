@@ -1,4 +1,4 @@
-package controller
+package journal
 
 import (
 	"net/http"
@@ -17,8 +17,9 @@ import (
 // @Success 200 {array} model.Journal
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
+// @Security Authorization
 // @Router /journal [get]
-func (c *Controller) ListJournals(ctx *gin.Context) {
+func ListJournals(ctx *gin.Context) {
 	journals, err := model.JournalsAll()
 
 	if err != nil {
@@ -39,8 +40,9 @@ func (c *Controller) ListJournals(ctx *gin.Context) {
 // @Success 200 {object} model.Journal
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
+// @Security Authorization
 // @Router /journal/{journal_id} [get]
-func (c *Controller) ShowJournal(ctx *gin.Context) {
+func ShowJournal(ctx *gin.Context) {
 	id := ctx.Param("journal_id")
 
 	journal, err := model.JournalOne(id)
@@ -65,8 +67,9 @@ func (c *Controller) ShowJournal(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
+// @Security Authorization
 // @Router /journal [post]
-func (c *Controller) AddJournal(ctx *gin.Context) {
+func AddJournal(ctx *gin.Context) {
 	var journal model.Journal
 
 	if err := ctx.ShouldBindJSON(&journal); err != nil {
@@ -94,8 +97,9 @@ func (c *Controller) AddJournal(ctx *gin.Context) {
 // @Success 200 {object} model.Journal
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
+// @Security Authorization
 // @Router /journal/{journal_id} [delete]
-func (c *Controller) DeleteJournal(ctx *gin.Context) {
+func DeleteJournal(ctx *gin.Context) {
 	id := ctx.Param("journal_id")
 
 	journal, err := model.JournalDelete(id)
@@ -119,8 +123,9 @@ func (c *Controller) DeleteJournal(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
+// @Security Authorization
 // @Router /journal/{journal_id} [put]
-func (c *Controller) UpdateJournal(ctx *gin.Context) {
+func UpdateJournal(ctx *gin.Context) {
 	id := ctx.Param("journal_id")
 	var journal model.Journal
 
@@ -150,7 +155,8 @@ func (c *Controller) UpdateJournal(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
+// @Security Authorization
 // @Router /journal/{journal_id}/signature [POST]
-func (c *Controller) CloseJournal(ctx *gin.Context) {
+func CloseJournal(ctx *gin.Context) {
 	httputils.Blank(ctx)
 }

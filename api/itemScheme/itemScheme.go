@@ -1,4 +1,4 @@
-package controller
+package itemScheme
 
 import (
 	"net/http"
@@ -17,8 +17,9 @@ import (
 // @Success 200 {array} model.ItemScheme
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
+// @Security Authorization
 // @Router /scheme/item [get]
-func (c *Controller) GetItemSchemes(ctx *gin.Context) {
+func GetItemSchemes(ctx *gin.Context) {
 	schemes, err := model.ItemSchemeAll()
 	if err != nil {
 		httputils.NewError(ctx, http.StatusNotFound, err)
@@ -38,8 +39,9 @@ func (c *Controller) GetItemSchemes(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
+// @Security Authorization
 // @Router /scheme/item/{itemscheme_id} [get]
-func (c *Controller) GetItemScheme(ctx *gin.Context) {
+func GetItemScheme(ctx *gin.Context) {
 	id := ctx.Param("itemscheme_id")
 	scheme, err := model.ItemSchemeOne(id)
 	if err != nil {
@@ -60,8 +62,9 @@ func (c *Controller) GetItemScheme(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
+// @Security Authorization
 // @Router /scheme/item [post]
-func (c *Controller) NewItemScheme(ctx *gin.Context) {
+func NewItemScheme(ctx *gin.Context) {
 	var newItemScheme model.NewItemScheme
 	if err := ctx.ShouldBindJSON(&newItemScheme); err != nil {
 		httputils.NewError(ctx, http.StatusBadRequest, err)
@@ -92,8 +95,9 @@ func (c *Controller) NewItemScheme(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
+// @Security Authorization
 // @Router /scheme/item/{itemscheme_id} [put]
-func (c *Controller) UpdateItemScheme(ctx *gin.Context) {
+func UpdateItemScheme(ctx *gin.Context) {
 	id := ctx.Param("itemscheme_id")
 
 	var updateItemScheme model.UpdateItemScheme
@@ -126,8 +130,9 @@ func (c *Controller) UpdateItemScheme(ctx *gin.Context) {
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
+// @Security Authorization
 // @Router /scheme/item/{itemscheme_id} [delete]
-func (c *Controller) DeleteItemScheme(ctx *gin.Context) {
+func DeleteItemScheme(ctx *gin.Context) {
 	id := ctx.Param("itemscheme_id")
 	err := model.DeleteSchemeOne(id)
 	if err != nil {

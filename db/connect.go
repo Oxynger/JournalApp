@@ -5,18 +5,13 @@ import (
 	"log"
 	"time"
 
+	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-
-	"github.com/Oxynger/JournalApp/config"
 )
 
-var (
-	// Client инстанс для подключеной базы данных
-	client mongo.Client
-)
-
-const ()
+// Client инстанс для подключеной базы данных
+var client mongo.Client
 
 // Client godoc
 func Client() mongo.Client {
@@ -31,17 +26,17 @@ func authorizeMongoUser(username, password string) options.Credential {
 	}
 }
 
-func isEmptyMongoUser(conf config.Config) bool {
-	return conf.MongoUsername == ""
+func isEmptyMongoUser(mognoUser options.Credential) bool {
+	return mognoUser.Username == ""
 }
 
-func authOptions(conf config.Config) (connectOptions *options.ClientOptions) {
+func authOptions() (connectOptions *options.ClientOptions) {
+	auth := authorizeMongoUser(viper.Get("MONGODB_ROOT_USERNAME").(string), viper.Get("MONGODB_ROOT_PASSWORD").(string))
 
-	if isEmptyMongoUser(conf) {
-		connectOptions = options.Client().ApplyURI(conf.MongoURI)
+	if isEmptyMongoUser(auth) {
+		connectOptions = options.Client().ApplyURI(viper.Get("mongodb_uri").(string))
 	} else {
-		auth := authorizeMongoUser(conf.MongoUsername, conf.MongoPassword)
-		connectOptions = options.Client().ApplyURI(conf.MongoURI).SetAuth(auth)
+		connectOptions = options.Client().ApplyURI(viper.Get("mongodb_uri").(string)).SetAuth(auth)
 	}
 
 	return connectOptions
@@ -49,10 +44,10 @@ func authOptions(conf config.Config) (connectOptions *options.ClientOptions) {
 }
 
 // Connect Получает инстанс подключения к базе данных
-func Connect(conf config.Config) {
+func Connect() {
 	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
-	connectOptions := authOptions(conf)
+	connectOptions := authOptions()
 
 	connect, err := mongo.Connect(timeout, connectOptions)
 
@@ -65,5 +60,4 @@ func Connect(conf config.Config) {
 	}
 
 	client = *connect
-
 }

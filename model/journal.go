@@ -306,3 +306,4 @@ func JournalUpdate(id string, journal Journal) (*Journal, error) {
 
 	return resaultJournal, nil
 }
+}
