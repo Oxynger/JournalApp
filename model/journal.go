@@ -2,6 +2,7 @@ package model
 
 import (
 	"context"
+	"errors"
 	"log"
 	"time"
 
@@ -17,10 +18,13 @@ import (
 // Journal godoc
 type Journal struct {
 	db.Model `bson:",inline"`
-	Daily    bool `bson:"daily" json:"daily" binding:"required"`
-	Fixed    bool `bson:"fixed" json:"fixed" binding:"required"`
+	Name     string `bson:"name" json:"name" binding:"required"`
+	Daily    bool   `bson:"daily" json:"daily" binding:"required"`
+	Fixed    bool   `bson:"fixed" json:"fixed" binding:"required"`
 	Values   map[string]interface{}
 }
+
+type JournalRequest = map[string]interface{}
 
 // journalCollection godoc
 func journalCollection() *mongo.Collection {
@@ -31,18 +35,18 @@ func journalCollection() *mongo.Collection {
 }
 
 // JournalsAll godoc
-func JournalsAll() (list []Journal, err error) {
+func JournalsAll() (list []JournalRequest, err error) {
 	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
 	filter := bson.D{
 		{
-			Key:   "deleted",
-			Value: false,
+			Key:   "deleted_at",
+			Value: nil,
 		},
 	}
 
 	withoutFields := bson.D{
-		{Key: "deleted", Value: 0},
+		{Key: "deleted_at", Value: 0},
 	}
 
 	findOptions := options.Find()
@@ -58,7 +62,7 @@ func JournalsAll() (list []Journal, err error) {
 	}
 
 	for cur.Next(timeout) {
-		var resault Journal
+		var resault JournalRequest
 		err := cur.Decode(&resault)
 
 		if err != nil {
@@ -77,12 +81,12 @@ func JournalsAll() (list []Journal, err error) {
 	return list, nil
 }
 
-func journalFindOne(id primitive.ObjectID) (journal *Journal, err error) {
+func journalFindOne(id primitive.ObjectID) (journal *JournalRequest, err error) {
 	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	filter := bson.D{
 		{
-			Key:   "deleted",
-			Value: false,
+			Key:   "deleted_at",
+			Value: nil,
 		},
 		{
 			Key:   "_id",
@@ -91,7 +95,7 @@ func journalFindOne(id primitive.ObjectID) (journal *Journal, err error) {
 	}
 
 	withoutFields := bson.D{
-		{Key: "deleted", Value: 0},
+		{Key: "deleted_at", Value: 0},
 	}
 
 	findOneOptions := options.FindOne()
@@ -107,7 +111,7 @@ func journalFindOne(id primitive.ObjectID) (journal *Journal, err error) {
 }
 
 // JournalOne godoc
-func JournalOne(id string) (journal *Journal, err error) {
+func JournalOne(id string) (journal *JournalRequest, err error) {
 	journalID, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {
@@ -124,7 +128,7 @@ func JournalOne(id string) (journal *Journal, err error) {
 }
 
 // JournalDelete godoc
-func JournalDelete(id string) (journal *Journal, err error) {
+func JournalDelete(id string) (journal *JournalRequest, err error) {
 	journalID, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {
@@ -134,8 +138,8 @@ func JournalDelete(id string) (journal *Journal, err error) {
 	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	filter := bson.D{
 		{
-			Key:   "deleted",
-			Value: false,
+			Key:   "deleted_at",
+			Value: nil,
 		},
 		{
 			Key:   "_id",
@@ -148,8 +152,8 @@ func JournalDelete(id string) (journal *Journal, err error) {
 			Key: "$set",
 			Value: bson.D{
 				{
-					Key:   "deleted",
-					Value: true,
+					Key:   "deleted_at",
+					Value: time.Now(),
 				},
 			},
 		},
@@ -171,13 +175,17 @@ func JournalDelete(id string) (journal *Journal, err error) {
 }
 
 // AddJournal godoc
-func AddJournal(journal Journal) (*Journal, error) {
+func AddJournal(journal Journal) (*JournalRequest, error) {
 	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
+
+	journal.CreatedAt = time.Now()
+	journal.UpdatedAt = time.Now()
+	journal.DeletedAt = nil
 
 	insertedResault, err := journalCollection().InsertOne(timeout, journal)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.New("not found resault journal")
 	}
 
 	resaultJournal, err := journalFindOne(insertedResault.InsertedID.(primitive.ObjectID))
@@ -190,7 +198,7 @@ func AddJournal(journal Journal) (*Journal, error) {
 }
 
 // JournalUpdate godoc
-func JournalUpdate(id string, journal Journal) (*Journal, error) {
+func JournalUpdate(id string, journal Journal) (*JournalRequest, error) {
 	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
 	journalID, err := primitive.ObjectIDFromHex(id)
