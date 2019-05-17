@@ -24,7 +24,7 @@ type Journal struct {
 	Values   map[string]interface{}
 }
 
-type JournalRequest = map[string]interface{}
+type JournalResponse = map[string]interface{}
 
 // journalCollection godoc
 func journalCollection() *mongo.Collection {
@@ -35,7 +35,7 @@ func journalCollection() *mongo.Collection {
 }
 
 // JournalsAll godoc
-func JournalsAll() (list []JournalRequest, err error) {
+func JournalsAll() (list []JournalResponse, err error) {
 	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
 	filter := bson.D{
@@ -62,7 +62,7 @@ func JournalsAll() (list []JournalRequest, err error) {
 	}
 
 	for cur.Next(timeout) {
-		var resault JournalRequest
+		var resault JournalResponse
 		err := cur.Decode(&resault)
 
 		if err != nil {
@@ -81,7 +81,7 @@ func JournalsAll() (list []JournalRequest, err error) {
 	return list, nil
 }
 
-func journalFindOne(id primitive.ObjectID) (journal *JournalRequest, err error) {
+func journalFindOne(id primitive.ObjectID) (journal *JournalResponse, err error) {
 	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	filter := bson.D{
 		{
@@ -111,7 +111,7 @@ func journalFindOne(id primitive.ObjectID) (journal *JournalRequest, err error) 
 }
 
 // JournalOne godoc
-func JournalOne(id string) (journal *JournalRequest, err error) {
+func JournalOne(id string) (journal *JournalResponse, err error) {
 	journalID, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {
@@ -128,7 +128,7 @@ func JournalOne(id string) (journal *JournalRequest, err error) {
 }
 
 // JournalDelete godoc
-func JournalDelete(id string) (journal *JournalRequest, err error) {
+func JournalDelete(id string) (journal *JournalResponse, err error) {
 	journalID, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {
@@ -175,7 +175,7 @@ func JournalDelete(id string) (journal *JournalRequest, err error) {
 }
 
 // AddJournal godoc
-func AddJournal(journal Journal) (*JournalRequest, error) {
+func AddJournal(journal Journal) (*JournalResponse, error) {
 	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
 	journal.CreatedAt = time.Now()
@@ -198,7 +198,7 @@ func AddJournal(journal Journal) (*JournalRequest, error) {
 }
 
 // JournalUpdate godoc
-func JournalUpdate(id string, journal Journal) (*JournalRequest, error) {
+func JournalUpdate(id string, journal Journal) (*JournalResponse, error) {
 	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
 	journalID, err := primitive.ObjectIDFromHex(id)
@@ -230,4 +230,34 @@ func JournalUpdate(id string, journal Journal) (*JournalRequest, error) {
 	}
 
 	return resaultJournal, nil
+}
+
+// JournalSearch godoc
+func JournalSearch(name string) (journal *JournalResponse, err error) {
+	timeout, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	filter := bson.D{
+		{
+			Key:   "deleted_at",
+			Value: nil,
+		},
+		{
+			Key:   "name",
+			Value: name,
+		},
+	}
+
+	withoutFields := bson.D{
+		{Key: "deleted_at", Value: 0},
+	}
+
+	findOneOptions := options.FindOne()
+	findOneOptions.SetProjection(withoutFields)
+
+	err = journalCollection().FindOne(timeout, filter, findOneOptions).Decode(&journal)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return journal, nil
 }

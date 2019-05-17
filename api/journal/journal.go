@@ -14,12 +14,13 @@ import (
 // @Tags Journal
 // @Accept  json
 // @Produce  json
-// @Success 200 {array} model.Journal
+// @Success 200 {array} model.JournalResponse
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
 // @Security Authorization
 // @Router /journal [get]
 func ListJournals(ctx *gin.Context) {
+
 	journals, err := model.JournalsAll()
 
 	if err != nil {
@@ -37,7 +38,7 @@ func ListJournals(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param journal_id path string true "Journal id"
-// @Success 200 {object} model.Journal
+// @Success 200 {object} model.JournalResponse
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
 // @Security Authorization
@@ -63,7 +64,7 @@ func ShowJournal(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param journal body model.Journal true "journal json"
-// @Success 200 {object} model.Journal
+// @Success 200 {object} model.JournalResponse
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
@@ -94,7 +95,7 @@ func AddJournal(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param journal_id path string true "Journal id"
-// @Success 200 {object} model.Journal
+// @Success 200 {object} model.JournalResponse
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
 // @Security Authorization
@@ -106,6 +107,7 @@ func DeleteJournal(ctx *gin.Context) {
 
 	if err != nil {
 		httputils.NewError(ctx, http.StatusNotFound, err)
+		return
 	}
 
 	ctx.JSON(http.StatusOK, journal)
@@ -119,7 +121,7 @@ func DeleteJournal(ctx *gin.Context) {
 // @Produce  json
 // @Param journal body model.Journal true "journal json"
 // @Param journal_id path string true "Journal id"
-// @Success 200 {object} model.Journal
+// @Success 200 {object} model.JournalResponse
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 404 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
@@ -138,6 +140,7 @@ func UpdateJournal(ctx *gin.Context) {
 
 	if err != nil {
 		httputils.NewError(ctx, http.StatusNotFound, err)
+		return
 	}
 
 	ctx.JSON(http.StatusOK, resaultJournal)

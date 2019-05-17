@@ -5,6 +5,7 @@ import (
 	"github.com/Oxynger/JournalApp/api/itemScheme"
 	"github.com/Oxynger/JournalApp/api/journal"
 	"github.com/Oxynger/JournalApp/api/operator"
+	"github.com/Oxynger/JournalApp/api/search"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 
@@ -53,7 +54,7 @@ func RegisterRoutes(router *gin.RouterGroup) {
 	}
 	searchGroup := router.Group("/search")
 	{
-		searchGroup.GET("")
+		searchGroup.POST("/journal", search.SearchJournal)
 	}
 	logs := router.Group("/logs/tabletapp")
 	{
