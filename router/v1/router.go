@@ -1,7 +1,5 @@
 package v1
 
-//go:generate swag init
-
 import (
 	"github.com/Oxynger/JournalApp/api"
 	"github.com/Oxynger/JournalApp/api/itemScheme"
@@ -13,7 +11,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 
-	swagdoc "github.com/Oxynger/JournalApp/router/v1/docs"
+	swagdoc "github.com/Oxynger/JournalApp/docs"
 )
 
 // @contact.name API Support
@@ -52,6 +50,10 @@ func RegisterRoutes(router *gin.RouterGroup) {
 		operatorGroup.POST("", operator.AddOperator)
 		operatorGroup.PUT(":operator_id", operator.UpdateOperator)
 		operatorGroup.DELETE(":operator_id", operator.DeleteOperator)
+	}
+	searchGroup := router.Group("/search")
+	{
+		searchGroup.GET("")
 	}
 	logs := router.Group("/logs/tabletapp")
 	{
