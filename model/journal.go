@@ -241,8 +241,13 @@ func JournalSearch(name string) (journal *JournalResponse, err error) {
 			Value: nil,
 		},
 		{
-			Key:   "name",
-			Value: name,
+			Key: "$text",
+			Value: bson.D{
+				{
+					Key:   "$search",
+					Value: name,
+				},
+			},
 		},
 	}
 
